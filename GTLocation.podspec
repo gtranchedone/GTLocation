@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "GTLocation"
-  s.version      = "0.1.0"
+  s.version      = "0.0.1"
   s.summary      = "A short description of GTLocation."
   s.description  = <<-DESC
                 	An extension to Core Location that adds categories and classes to easier working with locations. It also adds classes to interface with the Google Maps and Google Places APIs that aren't exposed in the Google Maps SDK.
@@ -14,11 +14,11 @@ Pod::Spec.new do |s|
   s.osx.deployment_target = '10.9'
   s.requires_arc = true
 
-  s.source_files = 'Classes'
+  s.source_files = 'Classes/**/*'
   s.ios.exclude_files = 'Classes/osx'
   s.osx.exclude_files = 'Classes/ios'
   s.public_header_files = 'Classes/**/*.h'
   
   s.frameworks = 'CoreLocation'
-  s.dependency 'GTFoundation', '~> 0.1.0'
+  s.dependency 'GTFoundation', '~> 0.0.7'
 end

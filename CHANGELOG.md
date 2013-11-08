@@ -1,4 +1,4 @@
-# GTLocation Changelog
+# GTLocation CHANGELOG
 
 ## 0.1.0
 

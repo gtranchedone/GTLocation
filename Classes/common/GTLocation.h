@@ -1,7 +1,8 @@
 //
-//  GTGoogleGeocoder.h
-//  GTLocation
+//  GTFoundation.h
+//  GTFoundation
 //
+//  Created by Gianluca Tranchedone on 14/08/13.
 //  The MIT License (MIT)
 //
 //  Copyright (c) 2013 Gianluca Tranchedone
@@ -24,13 +25,15 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
-#import <CoreLocation/CoreLocation.h>
+#import <Availability.h>
+#import <GTFoundation/GTFoundation.h>
 
-@interface GTGoogleGeocoder : NSObject
+#import "GTRoute.h"
+#import "GTGoogleGeocoder.h"
+#import "GTGoogleDirectionsOperation.h"
 
-+ (void)geocodeAddress:(NSString *)address withCompletionBlock:(void (^)(CLLocation *location, NSError *error))completionBlock;
-+ (void)reverseGeocodeLocationWithCoordinate:(CLLocationCoordinate2D)coordinate completionBlock:(void (^)(CLPlacemark *placemark, NSError *error))completionBlock;
-+ (void)searchAddress:(NSString *)address nearLocation:(CLLocation *)location mapsApiKey:(NSString *)apiKey completionBlock:(void (^)(NSArray *results, NSError *error))completionBlock;
+#if TARGET_OS_IPHONE
 
-@end
+#else
+
+#endif
