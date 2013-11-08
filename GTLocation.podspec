@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "GTLocation"
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   s.summary      = "A short description of GTLocation."
   s.description  = <<-DESC
                 	An extension to Core Location that adds categories and classes to easier working with locations. It also adds classes to interface with the Google Maps and Google Places APIs that aren't exposed in the Google Maps SDK.
@@ -20,5 +20,5 @@ Pod::Spec.new do |s|
   s.public_header_files = 'Classes/**/*.h'
   
   s.frameworks = 'CoreLocation'
-  s.dependency 'GTFoundation', '~> 0.0.7'
+  s.dependency 'GTFoundation', :git => 'https://github.com/gtranchedone/GTFoundation'
 end
