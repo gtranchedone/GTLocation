@@ -25,7 +25,6 @@
 //
 
 #import "GTRoute.h"
-#import <GTFoundation/NSString+HTML.h>
 
 inline GTTravelMode GTTravelModeFromNSString(NSString *string)
 {
@@ -47,13 +46,13 @@ inline GTTravelMode GTTravelModeFromNSString(NSString *string)
 inline NSString * NSStringFromGTTravelMode(GTTravelMode travelMode)
 {
     switch (travelMode) {
-            case GTTravelModeTransit:
+        case GTTravelModeTransit:
             return @"transit";
             
-            case GTTravelModeCycling:
+        case GTTravelModeCycling:
             return @"cycling";
             
-            case GTTravelModeWalking:
+        case GTTravelModeWalking:
             return @"walking";
             
         default:
@@ -64,29 +63,65 @@ inline NSString * NSStringFromGTTravelMode(GTTravelMode travelMode)
 FOUNDATION_STATIC_INLINE NSString * NSStringFromGTTravelModeVehicleType(GTTravelModeVehicleType type)
 {
     switch (type) {
-            case GTTravelModeVehicleTypeBoat:
-            return @"boat";
+        case GTTravelModeVehicleTypeFerry:
+            return @"ferry";
             
-            case GTTravelModeVehicleTypeBus:
+        case GTTravelModeVehicleTypeBus:
             return @"bus";
             
-            case GTTravelModeVehicleTypeCatapult:
+        case GTTravelModeVehicleTypeCatapult:
             return @"catapult";
             
-            case GTTravelModeVehicleTypePlane:
+        case GTTravelModeVehicleTypePlane:
             return @"plane";
             
-            case GTTravelModeVehicleTypeRocket:
+        case GTTravelModeVehicleTypeRocket:
             return @"rocket";
             
-            case GTTravelModeVehicleTypeSpaceship:
+        case GTTravelModeVehicleTypeSpaceship:
             return @"spaceship";
             
-            case GTTravelModeVehicleTypeSubway:
+        case GTTravelModeVehicleTypeSubway:
             return @"subway";
             
-            case GTTravelModeVehicleTypeTrain:
-            return @"train";
+        case GTTravelModeVehicleTypeTrain:
+            return @"rail";
+            
+        case GTTravelModeVehicleTypeCableCar:
+            return @"cablecar";
+            
+        case GTTravelModeVehicleTypeCommuterTrain:
+            return @"commutertrain";
+            
+        case GTTravelModeVehicleTypeFunicular:
+            return @"funicular";
+            
+        case GTTravelModeVehicleTypeGandolaLift:
+            return @"gandolalift";
+            
+        case GTTravelModeVehicleTypeHeavyRail:
+            return @"heavyrail";
+            
+        case GTTravelModeVehicleTypeHighSpeedTrain:
+            return @"highspeedtrain";
+            
+        case GTTravelModeVehicleTypeIntercityBus:
+            return @"intercitybus";
+            
+        case GTTravelModeVehicleTypeMetroRail:
+            return @"metrorail";
+            
+        case GTTravelModeVehicleTypeMonoRail:
+            return @"monorail";
+            
+        case GTTravelModeVehicleTypeShareTaxi:
+            return @"sharetaxi";
+            
+        case GTTravelModeVehicleTypeTram:
+            return @"tram";
+            
+        case GTTravelModeVehicleTypeTrolleyBus:
+            return @"trolleybus";
             
         default:
             return nil;
@@ -100,8 +135,8 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
     }
     
     string = [string lowercaseString];
-    if ([string isEqualToString:@"boat"]) {
-        return GTTravelModeVehicleTypeBoat;
+    if ([string isEqualToString:@"ferry"]) {
+        return GTTravelModeVehicleTypeFerry;
     }
     else if ([string isEqualToString:@"bus"]) {
         return GTTravelModeVehicleTypeBus;
@@ -118,11 +153,47 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
     else if ([string isEqualToString:@"plane"]) {
         return GTTravelModeVehicleTypePlane;
     }
-    else if ([string isEqualToString:@"train"]) {
+    else if ([string isEqualToString:@"rail"]) {
         return GTTravelModeVehicleTypeTrain;
     }
     else if ([string isEqualToString:@"subway"]) {
         return GTTravelModeVehicleTypeSubway;
+    }
+    else if ([string isEqualToString:@"cablecar"]) {
+        return GTTravelModeVehicleTypeCableCar;
+    }
+    else if ([string isEqualToString:@"commutertrain"]) {
+        return GTTravelModeVehicleTypeCommuterTrain;
+    }
+    else if ([string isEqualToString:@"funicular"]) {
+        return GTTravelModeVehicleTypeFunicular;
+    }
+    else if ([string isEqualToString:@"gandolalift"]) {
+        return GTTravelModeVehicleTypeGandolaLift;
+    }
+    else if ([string isEqualToString:@"heavyrail"]) {
+        return GTTravelModeVehicleTypeHeavyRail;
+    }
+    else if ([string isEqualToString:@"highspeedtrain"]) {
+        return GTTravelModeVehicleTypeHighSpeedTrain;
+    }
+    else if ([string isEqualToString:@"intercitybus"]) {
+        return GTTravelModeVehicleTypeIntercityBus;
+    }
+    else if ([string isEqualToString:@"metrorail"]) {
+        return GTTravelModeVehicleTypeMetroRail;
+    }
+    else if ([string isEqualToString:@"monorail"]) {
+        return GTTravelModeVehicleTypeMonoRail;
+    }
+    else if ([string isEqualToString:@"sharetaxi"]) {
+        return GTTravelModeVehicleTypeShareTaxi;
+    }
+    else if ([string isEqualToString:@"tram"]) {
+        return GTTravelModeVehicleTypeTram;
+    }
+    else if ([string isEqualToString:@"trolleybus"]) {
+        return GTTravelModeVehicleTypeTrolleyBus;
     }
     else {
         return GTTravelModeVehicleTypeUndefined;
@@ -149,26 +220,26 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
 {
     self = [super init];
     if (self) {
-        _distance = [aDecoder decodeDoubleForKey:@"distance"];
-        _travelMode = [aDecoder decodeIntegerForKey:@"travelMode"];
-        _endLocation = [aDecoder decodeObjectForKey:@"endLocation"];
-        _vehicleType = [aDecoder decodeIntegerForKey:@"vehicleType"];
-        _startLocation = [aDecoder decodeObjectForKey:@"startLocation"];
-        _instructions = [[aDecoder decodeObjectForKey:@"instructions"] copy];
-        _expectedTravelDuration = [aDecoder decodeDoubleForKey:@"expectedTravelDuration"];
+        _distance = [aDecoder decodeDoubleForKey:NSStringFromSelector(@selector(distance))];
+        _travelMode = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(travelMode))];
+        _endLocation = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(endLocation))];
+        _vehicleType = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(vehicleType))];
+        _startLocation = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(startLocation))];
+        _instructions = [[aDecoder decodeObjectForKey:NSStringFromSelector(@selector(instructions))] copy];
+        _expectedTravelDuration = [aDecoder decodeDoubleForKey:NSStringFromSelector(@selector(expectedTravelDuration))];
     }
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeDouble:_distance forKey:@"distance"];
-    [aCoder encodeInteger:_travelMode forKey:@"travelMode"];
-    [aCoder encodeInteger:_vehicleType forKey:@"vehicleType"];
-    [aCoder encodeObject:_instructions forKey:@"instructions"];
-    [aCoder encodeObject:_endLocation forKey:@"endLocation"];
-    [aCoder encodeObject:_startLocation forKey:@"startLocation"];
-    [aCoder encodeDouble:_expectedTravelDuration forKey:@"expectedTravelDuration"];
+    [aCoder encodeDouble:_distance forKey:NSStringFromSelector(@selector(distance))];
+    [aCoder encodeInteger:_travelMode forKey:NSStringFromSelector(@selector(travelMode))];
+    [aCoder encodeObject:_endLocation forKey:NSStringFromSelector(@selector(endLocation))];
+    [aCoder encodeInteger:_vehicleType forKey:NSStringFromSelector(@selector(vehicleType))];
+    [aCoder encodeObject:_instructions forKey:NSStringFromSelector(@selector(instructions))];
+    [aCoder encodeObject:_startLocation forKey:NSStringFromSelector(@selector(startLocation))];
+    [aCoder encodeDouble:_expectedTravelDuration forKey:NSStringFromSelector(@selector(expectedTravelDuration))];
 }
 
 - (void)configureWithDictionary:(NSDictionary *)dictionary
@@ -177,7 +248,8 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
     NSDictionary *durationDictionary = [dictionary objectForKey:@"duration"];
     NSDictionary *endLocationDictionary = [dictionary objectForKey:@"end_location"];
     NSDictionary *startLocationDictionary = [dictionary objectForKey:@"start_location"];
-    NSDictionary *vehicleDictionary = [[[dictionary objectForKey:@"transit_details"] objectForKey:@"line"] objectForKey:@"vehicle"];
+    NSDictionary *transitDetailsDictionary = [dictionary objectForKey:@"transit_details"];
+    NSDictionary *vehicleDictionary = [[transitDetailsDictionary objectForKey:@"line"] objectForKey:@"vehicle"];
     
     NSNumber *startLocationLatitude = [startLocationDictionary objectForKey:@"lat"];
     NSNumber *startLocationLongitude = [startLocationDictionary objectForKey:@"lng"];
@@ -191,6 +263,11 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
     _instructions = [[dictionary objectForKey:@"html_instructions"] stringByStrippingHTML];
     _endLocation = [[CLLocation alloc] initWithLatitude:[endLocationLatitude doubleValue] longitude:[endLocationLongitude doubleValue]];
     _startLocation = [[CLLocation alloc] initWithLatitude:[startLocationLatitude doubleValue] longitude:[startLocationLongitude doubleValue]];
+    
+    NSDictionary *transitArrivalStopDictionary = [transitDetailsDictionary objectForKey:@"arrival_stop"];
+    if (transitArrivalStopDictionary) {
+        _instructions = [_instructions stringByAppendingFormat:@". Arrive at %@", [transitArrivalStopDictionary objectForKey:@"name"]];
+    }
     
     if (vehicleDictionary.count) {
         NSString *vehicleType = [vehicleDictionary objectForKey:@"type"];
@@ -210,10 +287,20 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
 
 + (instancetype)routeWithSteps:(NSArray *)steps travelMode:(GTTravelMode)travelMode
 {
-    return [[self alloc] initWithSteps:steps travelMode:travelMode];
+    return [self routeWithSteps:steps travelMode:travelMode polyline:nil];
+}
+
++ (instancetype)routeWithSteps:(NSArray *)steps travelMode:(GTTravelMode)travelMode polyline:(id)polyline
+{
+    return [[self alloc] initWithSteps:steps travelMode:travelMode polyline:polyline];
 }
 
 - (instancetype)initWithSteps:(NSArray *)steps travelMode:(GTTravelMode)travelMode
+{
+    return [self initWithSteps:steps travelMode:travelMode polyline:nil];
+}
+
+- (instancetype)initWithSteps:(NSArray *)steps travelMode:(GTTravelMode)travelMode polyline:(id)polyline
 {
     self = [super init];
     if (self) {
@@ -231,6 +318,7 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
         if (stepsAreValid) {
             _steps = [steps copy];
             _travelMode = travelMode;
+            _gMapsPolyline = [polyline copy];
             _endLocation = [[_steps lastObject] endLocation];
             _startLocation = [[_steps firstObject] startLocation];
         }
@@ -245,28 +333,28 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
 {
     self = [super init];
     if (self) {
-        _steps = [[aDecoder decodeObjectForKey:@"steps"] copy];
-        _travelMode = [aDecoder decodeIntegerForKey:@"travelMode"];
-        _endLocation = [aDecoder decodeObjectForKey:@"endLocation"];
-        _startLocation = [aDecoder decodeObjectForKey:@"startLocation"];
-        _expectedTravelDuration = [aDecoder decodeDoubleForKey:@"expectedTravelDuration"];
+        _steps = [[aDecoder decodeObjectForKey:NSStringFromSelector(@selector(steps))] copy];
+        _travelMode = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(travelMode))];
+        _endLocation = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(endLocation))];
+        _startLocation = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(startLocation))];
+        _expectedTravelDuration = [aDecoder decodeDoubleForKey:NSStringFromSelector(@selector(expectedTravelDuration))];
     }
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeObject:_steps forKey:@"steps"];
-    [aCoder encodeInteger:_travelMode forKey:@"travelMode"];
-    [aCoder encodeObject:_endLocation forKey:@"endLocation"];
-    [aCoder encodeObject:_startLocation forKey:@"startLocation"];
-    [aCoder encodeDouble:_expectedTravelDuration forKey:@"expectedTravelDuration"];
+    [aCoder encodeObject:_steps forKey:NSStringFromSelector(@selector(steps))];
+    [aCoder encodeInteger:_travelMode forKey:NSStringFromSelector(@selector(travelMode))];
+    [aCoder encodeObject:_endLocation forKey:NSStringFromSelector(@selector(endLocation))];
+    [aCoder encodeObject:_startLocation forKey:NSStringFromSelector(@selector(startLocation))];
+    [aCoder encodeDouble:_expectedTravelDuration forKey:NSStringFromSelector(@selector(expectedTravelDuration))];
 }
 
 - (NSString *)description
 {
     NSMutableString *string = [[NSMutableString alloc] init];
-    [string appendFormat:@"<%@: %p> {\n\tstartPoint:%@,\n\tendPoint:%@,\n\ttravelMode:%d,\n\tduration:%.1f,\n\tsteps: [", NSStringFromClass(self.class), &self, self.startLocation, self.endLocation, self.travelMode, self.expectedTravelDuration];
+    [string appendFormat:@"<%@: %p> {\n\tstartPoint:%@,\n\tendPoint:%@,\n\ttravelMode:%d,\n\tduration:%.1f,\n\tsteps: [", NSStringFromClass(self.class), &self, self.startLocation, self.endLocation, (int)self.travelMode, self.expectedTravelDuration];
     
     for (GTRouteStep *step in self.steps) {
         [string appendFormat:@"\n\t\t%@", step.description];
