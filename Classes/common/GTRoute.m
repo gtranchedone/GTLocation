@@ -321,18 +321,6 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
             _gMapsPolyline = [polyline copy];
             _endLocation = [[_steps lastObject] endLocation];
             _startLocation = [[_steps firstObject] startLocation];
-            
-            if (_steps.count) {
-                // create a c array containing the start and end coordinate of each step
-                CLLocationCoordinate2D coordinates[_steps.count * 2];
-                for (int i = 0; i < _steps.count; i += 2) {
-                    GTRouteStep *step = _steps[i];
-                    coordinates[i] = step.startLocation.coordinate;
-                    coordinates[i+1] = step.endLocation.coordinate;
-                }
-                
-                _polyline = [MKPolyline polylineWithCoordinates:&coordinates[0] count:(_steps.count * 2)];
-            }
         }
         else {
             [NSException raise:@"ch.gtran.GTRoute" format:@"Attempt to initialize a GTRoute object with instances of classes other than GTRouteStep: %@", steps];
@@ -349,6 +337,7 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
         _travelMode = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(travelMode))];
         _endLocation = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(endLocation))];
         _startLocation = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(startLocation))];
+        _gMapsPolyline = [[aDecoder decodeObjectForKey:NSStringFromSelector(@selector(gMapsPolyline))] copy];
         _expectedTravelDuration = [aDecoder decodeDoubleForKey:NSStringFromSelector(@selector(expectedTravelDuration))];
     }
     return self;
@@ -360,6 +349,7 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
     [aCoder encodeInteger:_travelMode forKey:NSStringFromSelector(@selector(travelMode))];
     [aCoder encodeObject:_endLocation forKey:NSStringFromSelector(@selector(endLocation))];
     [aCoder encodeObject:_startLocation forKey:NSStringFromSelector(@selector(startLocation))];
+    [aCoder encodeObject:_gMapsPolyline forKey:NSStringFromSelector(@selector(gMapsPolyline))];
     [aCoder encodeDouble:_expectedTravelDuration forKey:NSStringFromSelector(@selector(expectedTravelDuration))];
 }
 
@@ -375,6 +365,24 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
     [string appendString:@"\n\t]\n}"];
     
     return [string copy];
+}
+
+// MKPolyline and it's superclasses do not conform to the NSCoding protocol, therefore, if the self was initialized with initWithCoder: will not have the polyline set.
+- (MKPolyline *)polyline
+{
+    if (_steps.count && !_polyline) {
+        // create a c array containing the start and end coordinate of each step
+        CLLocationCoordinate2D coordinates[_steps.count];
+        for (int i = 0; i < _steps.count; i++) {
+            GTRouteStep *step = _steps[i];
+            coordinates[i] = step.startLocation.coordinate;
+            //coordinates[i+1] = step.endLocation.coordinate;
+        }
+        
+        _polyline = [MKPolyline polylineWithCoordinates:&coordinates[0] count:_steps.count];
+    }
+    
+    return _polyline;
 }
 
 @end

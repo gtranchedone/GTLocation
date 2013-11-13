@@ -204,7 +204,10 @@ FOUNDATION_EXTERN NSString * NSStringFromGTTravelMode(GTTravelMode travelMode);
  @abstract GTRoute represents a route with directions to go from one location to another with a certain travel mode.
  @discussion A route is composed by smaller steps. This are instances of the GTRouteStep class.
  */
-@interface GTRoute : NSObject <NSCoding>
+@interface GTRoute : NSObject <NSCoding> {
+    @private
+    MKPolyline *_polyline;
+}
 
 ///--------------------------------------------------
 /// @name Retrieving the Route setup data
