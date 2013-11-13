@@ -321,6 +321,18 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
             _gMapsPolyline = [polyline copy];
             _endLocation = [[_steps lastObject] endLocation];
             _startLocation = [[_steps firstObject] startLocation];
+            
+            if (_steps.count) {
+                // create a c array containing the start and end coordinate of each step
+                CLLocationCoordinate2D coordinates[_steps.count * 2];
+                for (int i = 0; i < _steps.count; i += 2) {
+                    GTRouteStep *step = _steps[i];
+                    coordinates[i] = step.startLocation.coordinate;
+                    coordinates[i+1] = step.endLocation.coordinate;
+                }
+                
+                _polyline = [MKPolyline polylineWithCoordinates:&coordinates[0] count:(_steps.count * 2)];
+            }
         }
         else {
             [NSException raise:@"ch.gtran.GTRoute" format:@"Attempt to initialize a GTRoute object with instances of classes other than GTRouteStep: %@", steps];

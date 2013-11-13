@@ -24,6 +24,7 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#import <MapKit/MapKit.h>
 #import <Foundation/Foundation.h>
 #import <GTFoundation/GTFoundation.h>
 #import <CoreLocation/CoreLocation.h>
@@ -222,6 +223,8 @@ FOUNDATION_EXTERN NSString * NSStringFromGTTravelMode(GTTravelMode travelMode);
 
 /// An array of GTRouteStep objects representing each a small pieace of the journey.
 @property (nonatomic, readonly, copy) NSArray *steps;
+/// A MKPolyline object representing the Route that you can add as an overlay on a MKMapView object.
+@property (nonatomic, readonly, strong) MKPolyline *polyline;
 /// A string representing  Route's polyline as returned by the Google Directions APIs. It can be used to draw directions on a GMSMapView (Google Maps SDK).
 @property (nonatomic, readonly, copy) NSString *gMapsPolyline;
 /// The expected travel duration
