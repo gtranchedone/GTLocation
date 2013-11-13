@@ -372,14 +372,22 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
 {
     if (_steps.count && !_polyline) {
         // create a c array containing the start and end coordinate of each step
-        CLLocationCoordinate2D coordinates[(_steps.count * 2)];
-        for (int i = 0; i < _steps.count; i += 2) {
-            GTRouteStep *step = _steps[i];
-            coordinates[i] = step.startLocation.coordinate;
-            coordinates[i+1] = step.endLocation.coordinate;
+        CLLocationCoordinate2D coordinates[(_steps.count * 2)]; // by 2 as each step should have a start and end location.
+        NSInteger coordinatesCount = 0;
+        for (GTRouteStep *step in _steps) {
+            if (step.startLocation) {
+                coordinates[coordinatesCount] = step.startLocation.coordinate;
+                coordinatesCount++;
+            }
+            if (step.endLocation) {
+                coordinates[coordinatesCount] = step.endLocation.coordinate;
+                coordinatesCount++;
+            }
         }
         
-        _polyline = [MKPolyline polylineWithCoordinates:&coordinates[0] count:(_steps.count * 2)];
+        if (coordinatesCount) {
+            _polyline = [MKPolyline polylineWithCoordinates:&coordinates[0] count:coordinatesCount];
+        }
     }
     
     return _polyline;
