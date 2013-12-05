@@ -260,7 +260,7 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
     _distance = [[distanceDictionary objectForKey:@"value"] doubleValue];
     _travelMode = GTTravelModeFromNSString([dictionary objectForKey:@"travel_mode"]);
     _expectedTravelDuration = [[durationDictionary objectForKey:@"value"] doubleValue];
-    _instructions = [[dictionary objectForKey:@"html_instructions"] stringByStrippingHTML];
+    _instructions = [[dictionary objectForKey:@"html_instructions"] GT_stringByStrippingHTML];
     _endLocation = [[CLLocation alloc] initWithLatitude:[endLocationLatitude doubleValue] longitude:[endLocationLongitude doubleValue]];
     _startLocation = [[CLLocation alloc] initWithLatitude:[startLocationLatitude doubleValue] longitude:[startLocationLongitude doubleValue]];
     
