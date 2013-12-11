@@ -110,7 +110,8 @@
                         for (NSDictionary *stepDictionary in steps) {
                             [routeSteps addObject:[GTRouteStep routeStepWithStepDictionary:stepDictionary]];
                         }
-                        [availableRoutes addObject:[GTRoute routeWithSteps:routeSteps travelMode:self.travelMode]];
+                        NSString *polyline = [[routeDictionary objectForKey:@"overview_polyline"] objectForKey:@"points"];
+                        [availableRoutes addObject:[GTRoute routeWithSteps:routeSteps travelMode:self.travelMode polyline:polyline]];
                     }
                     _availableRoutes = [availableRoutes copy];
                 }

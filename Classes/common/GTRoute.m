@@ -316,9 +316,17 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
         }
         
         if (stepsAreValid) {
+            if (polyline) {
+                if ([polyline isKindOfClass:[NSString class]]) {
+                    _gMapsPolyline = [polyline copy];
+                }
+                else if ([polyline isKindOfClass:[MKPolyline class]]) {
+                    _polyline = polyline;
+                }
+            }
+            
             _steps = [steps copy];
             _travelMode = travelMode;
-            _gMapsPolyline = [polyline copy];
             _endLocation = [[_steps lastObject] endLocation];
             _startLocation = [[_steps firstObject] startLocation];
         }
