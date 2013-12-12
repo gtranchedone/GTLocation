@@ -171,7 +171,7 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
     else if ([string isEqualToString:@"gandolalift"]) {
         return GTTravelModeVehicleTypeGandolaLift;
     }
-    else if ([string isEqualToString:@"heavyrail"]) {
+    else if ([string isEqualToString:@"heavy_rail"]) {
         return GTTravelModeVehicleTypeHeavyRail;
     }
     else if ([string isEqualToString:@"highspeedtrain"]) {

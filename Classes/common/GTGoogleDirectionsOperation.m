@@ -55,9 +55,21 @@
 
 #pragma mark - Superclass Methods Override
 
+//- (BOOL)isExecuting
+//{
+//    return _executing;
+//}
+//
+//- (BOOL)isFinished
+//{
+//    return _finished;
+//}
+
 - (void)main
 {
     if (!self.isCancelled) {
+//        [self startOperation];
+        
         NSString *directionsBaseUrl = @"http://maps.googleapis.com/maps/api/directions/json?";
         NSString *url = [NSString stringWithFormat:@"%@origin=%@&destination=%@&sensor=false&mode=%@", directionsBaseUrl,
                          [self.class formattedLocation:self.origin],
@@ -125,30 +137,30 @@
         }
         
         _error = [error copy];
-        [self setFinished:YES];
     }
-}
-
-- (void)setFinished:(BOOL)finished
-{
-    [self willChangeValueForKey:@"isFinished"];
-    [self willChangeValueForKey:@"isExecuting"];
     
-    _finished = finished;
-    _executing = !finished;
-    
-    [self didChangeValueForKey:@"isFinished"];
-    [self didChangeValueForKey:@"isExecuting"];
+//    [self completeOperation];
 }
 
-- (BOOL)isExecuting
-{
-    return _executing;
-}
-
-- (BOOL)isFinished
-{
-    return _finished;
-}
+//- (void)startOperation
+//{
+//    [self willChangeValueForKey:@"isExecuting"];
+//    
+//    _executing = YES;
+//    
+//    [self didChangeValueForKey:@"isExecuting"];
+//}
+//
+//- (void)completeOperation
+//{
+//    [self willChangeValueForKey:@"isFinished"];
+//    [self willChangeValueForKey:@"isExecuting"];
+//    
+//    _finished = YES;
+//    _executing = NO;
+//    
+//    [self didChangeValueForKey:@"isFinished"];
+//    [self didChangeValueForKey:@"isExecuting"];
+//}
 
 @end

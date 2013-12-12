@@ -26,11 +26,7 @@
 
 #import "GTRoute.h"
 
-@interface GTGoogleDirectionsOperation : NSOperation {
-    @private
-    BOOL _finished;
-    BOOL _executing;
-}
+@interface GTGoogleDirectionsOperation : NSOperation
 
 ///--------------------------------------------------
 /// @name Setting optional values

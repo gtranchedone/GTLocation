@@ -1,7 +1,7 @@
 PODS:
   - GTFoundation (0.0.9)
-  - GTLocation (0.0.2):
-    - GTFoundation (~> 0.0.7)
+  - GTLocation (0.0.4):
+    - GTFoundation (~> 0.0.9)
 
 DEPENDENCIES:
   - GTLocation (from `../`)
@@ -12,6 +12,6 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   GTFoundation: 699dbcebf50afdc07ef668a9af1653243d6f7843
-  GTLocation: 88b916498643d46bad2648ed376bda558ae7fd36
+  GTLocation: 15b5e65bf9259c87d7991081dd1f23b3964a8e3b
 
 COCOAPODS: 0.28.0
