@@ -29,8 +29,18 @@
 
 @interface GTGoogleGeocoder : NSObject
 
+///--------------------------------------------------
+/// @name Google Place APIs
+///--------------------------------------------------
+
++ (void)searchLocationsMatchingAddress:(NSString *)address apiKey:(NSString *)apiKey completionBlock:(void (^)(NSArray *results, NSError *error))completionBlock;
++ (void)searchLocationsMatchingAddress:(NSString *)address nearLocation:(CLLocation *)location apiKey:(NSString *)apiKey completionBlock:(void (^)(NSArray *results, NSError *error))completionBlock;
+
+///--------------------------------------------------
+/// @name Google Maps APIs
+///--------------------------------------------------
+
 + (void)geocodeAddress:(NSString *)address withCompletionBlock:(void (^)(CLLocation *location, NSError *error))completionBlock;
 + (void)reverseGeocodeLocationWithCoordinate:(CLLocationCoordinate2D)coordinate completionBlock:(void (^)(CLPlacemark *placemark, NSError *error))completionBlock;
-+ (void)searchAddress:(NSString *)address nearLocation:(CLLocation *)location mapsApiKey:(NSString *)apiKey completionBlock:(void (^)(NSArray *results, NSError *error))completionBlock;
 
 @end
