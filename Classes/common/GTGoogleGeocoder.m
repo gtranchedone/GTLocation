@@ -46,7 +46,7 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSError *error = nil;
-        NSArray *results = nil;
+        NSMutableArray *results = [NSMutableArray array];
         
         NSError *networkError = nil;
         NSData *responseData = [NSData dataWithContentsOfURL:queryUrl options:NSDataReadingMappedIfSafe error:&networkError];
@@ -61,7 +61,10 @@
                     error = [NSError errorWithDomain:@"ch.gtran.GTGoogleGeocoder" code:1 userInfo:jsonDictionary];
                 }
                 else {
-                    results = [jsonDictionary objectForKey:@"results"];
+                    NSArray *googleResults = [jsonDictionary objectForKey:@"results"];
+                    [googleResults enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                        [results addObject:[self locationFromResponseDictionary:obj]];
+                    }];
                 }
             }
             else {
@@ -99,7 +102,7 @@
             NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:responseData options:kNilOptions error:&jsonError];
             
             if (jsonDictionary && !jsonError) {
-                location = [self placemarkFromResponseDictionary:jsonDictionary];
+                location = [self locationFromResponseDictionary:jsonDictionary];
             }
             else {
                 error = jsonError;
@@ -157,7 +160,7 @@
     });
 }
 
-+ (CLLocation *)placemarkFromResponseDictionary:(NSDictionary *)dictionary {
++ (CLLocation *)locationFromResponseDictionary:(NSDictionary *)dictionary {
     NSArray *results = [dictionary objectForKey:@"results"];
     if (results.count) {
         NSDictionary *result = [results objectAtIndex:0];
