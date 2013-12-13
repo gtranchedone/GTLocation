@@ -169,10 +169,10 @@
     if (dictionary) {
         NSDictionary *geometry = [dictionary objectForKey:@"geometry"];
         NSDictionary *location = [geometry objectForKey:@"location"];
-        NSString *lat = [location objectForKey:@"lat"];
-        NSString *lng = [location objectForKey:@"lng"];
+        NSNumber *lat = [location objectForKey:@"lat"];
+        NSNumber *lng = [location objectForKey:@"lng"];
         
-        if (lat.length && lng.length) {
+        if (lat && lng) {
             return [[CLLocation alloc] initWithLatitude:lat.doubleValue longitude:lng.doubleValue];
         }
         else {
