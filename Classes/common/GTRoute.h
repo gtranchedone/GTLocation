@@ -168,6 +168,8 @@ FOUNDATION_EXTERN NSString * NSStringFromGTTravelMode(GTTravelMode travelMode);
 
 /// Instructions for the user (e.g. 'Take the Subway').
 @property (nonatomic, readonly, copy) NSString *instructions;
+/// Some extra data returned by Google about the travel mean and vehicle.
+@property (nonatomic, readonly, copy) NSDictionary *travelInfo;
 /// The route distance in meters represented by the step.
 @property (nonatomic, readonly, assign) CLLocationDistance distance;
 /// The vechicle type that should be used to travel from the step's startLocation to the endLocation. It only applies when the travelMode is GTTravelModeTransit.

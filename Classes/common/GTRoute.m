@@ -257,6 +257,7 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
     NSNumber *endLocationLatitude = [endLocationDictionary objectForKey:@"lat"];
     NSNumber *endLocationLongitude = [endLocationDictionary objectForKey:@"lng"];
     
+    _travelInfo = [transitDetailsDictionary copy];
     _distance = [[distanceDictionary objectForKey:@"value"] doubleValue];
     _travelMode = GTTravelModeFromNSString([dictionary objectForKey:@"travel_mode"]);
     _expectedTravelDuration = [[durationDictionary objectForKey:@"value"] doubleValue];
