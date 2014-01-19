@@ -26,7 +26,6 @@
 //
 
 #import <Availability.h>
-#import <GTFoundation/GTFoundation.h>
 
 #import "GTRoute.h"
 #import "GTGoogleGeocoder.h"

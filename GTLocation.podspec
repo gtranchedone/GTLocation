@@ -20,5 +20,4 @@ Pod::Spec.new do |s|
   s.public_header_files = 'Classes/**/*.h'
   
   s.frameworks = 'CoreLocation'
-  s.dependency 'GTFoundation', '~> 0.0.9'
 end
