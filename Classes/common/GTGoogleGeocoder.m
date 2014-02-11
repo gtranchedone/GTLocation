@@ -46,7 +46,7 @@
     
     urlString = [urlString stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
     
-    [self performQueryWithURL:[NSURL URLWithString:urlString] completionBlock:completionBlock];
+    [self performQueryWithURL:[NSURL URLWithString:urlString] address:address completionBlock:completionBlock];
 }
 
 #pragma mark Google Maps APIs
@@ -130,8 +130,9 @@
 
 #pragma mark - Private APIs -
 
-+ (void)performQueryWithURL:(NSURL *)queryURL completionBlock:(void (^)(NSArray *results, NSError *error))completionBlock
++ (void)performQueryWithURL:(NSURL *)queryURL address:(NSString *)address completionBlock:(void (^)(NSArray *results, NSError *error))completionBlock
 {
+    address = [address lowercaseString];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration]];
     NSURLRequest *request = [NSURLRequest requestWithURL:queryURL cachePolicy:NSURLCacheStorageAllowedInMemoryOnly timeoutInterval:10];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *responseData, NSURLResponse *response, NSError *networkError) {
@@ -150,7 +151,20 @@
                 else {
                     NSArray *googleResults = [jsonDictionary objectForKey:@"results"];
                     [googleResults enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                        [results addObject:[self locationFromResponseDictionary:obj]];
+                        __block NSInteger numberOfWords = 0;
+                        __block NSInteger numberOfMatches = 0;
+                        NSString *name = [[obj objectForKey:@"name"] lowercaseString];
+                        
+                        [name enumerateSubstringsInRange:NSMakeRange(0, name.length) options:NSStringEnumerationByWords usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+                            numberOfWords++;
+                            if ([address rangeOfString:substring].location != NSNotFound) {
+                                numberOfMatches++;
+                            }
+                        }];
+                        
+                        if (numberOfMatches > (numberOfWords / 2)) {
+                            [results addObject:[self locationFromResponseDictionary:obj]];
+                        }
                     }];
                 }
             }
@@ -196,4 +210,3 @@
 }
 
 @end
-
