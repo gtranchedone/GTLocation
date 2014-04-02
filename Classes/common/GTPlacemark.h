@@ -48,6 +48,6 @@
 @property (nonatomic, readonly, copy) NSString *ocean; // eg. Pacific Ocean
 @property (nonatomic, readonly, copy) NSArray *areasOfInterest; // eg. Golden Gate Park
 
-+ (GTPlacemark *)placemarkWithLocation:(CLLocation *)location address:(NSString *)address;
++ (GTPlacemark *)placemarkWithLocation:(CLLocation *)location address:(NSString *)address __unavailable;
 
 @end

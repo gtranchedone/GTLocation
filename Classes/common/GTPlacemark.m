@@ -52,24 +52,4 @@
 
 @implementation GTPlacemark
 
-+ (GTPlacemark *)placemarkWithLocation:(CLLocation *)location address:(NSString *)address
-{
-    return [[self alloc] initWithPlacemarkWithLocation:location address:address];
-}
-
-- (instancetype)initWithPlacemarkWithLocation:(CLLocation *)location address:(NSString *)address
-{
-    self = [super init];
-    if (self) {
-        [self setupByParsingAddress:address forLocation:location];
-    }
-    return self;
-}
-
-- (void)setupByParsingAddress:(NSString *)address forLocation:(NSString *)location
-{
-    self.location = location;
-    self.addressLine = address;
-}
-
 @end

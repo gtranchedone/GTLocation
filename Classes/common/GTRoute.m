@@ -62,7 +62,7 @@ inline NSString * NSStringFromGTTravelMode(GTTravelMode travelMode)
     }
 }
 
-FOUNDATION_STATIC_INLINE NSString * NSStringFromGTTravelModeVehicleType(GTTravelModeVehicleType type)
+inline NSString * NSStringFromGTTravelModeVehicleType(GTTravelModeVehicleType type)
 {
     switch (type) {
         case GTTravelModeVehicleTypeFerry:

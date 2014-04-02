@@ -155,6 +155,7 @@ typedef NS_ENUM(NSInteger, GTTravelModeVehicleType) {
 
 FOUNDATION_EXTERN GTTravelMode GTTravelModeFromNSString(NSString *string);
 FOUNDATION_EXTERN NSString * NSStringFromGTTravelMode(GTTravelMode travelMode);
+FOUNDATION_EXTERN NSString * NSStringFromGTTravelModeVehicleType(GTTravelModeVehicleType type);
 
 /**
  @abstract A GTRouteStep object represents a piace of directions to get from one location to another with a given travel mode.
