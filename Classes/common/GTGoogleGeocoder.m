@@ -1,6 +1,9 @@
 //
 //  GTGoogleGeocoder.m
 //  GTLocation
+//
+//  Created by Gianluca Tranchedone http://gtranchedone.com
+//
 //  The MIT License (MIT)
 //
 //  Copyright (c) 2013 Gianluca Tranchedone
@@ -57,17 +60,14 @@
     NSString *urlString = [NSString stringWithFormat:@"%@address=%@&sensor=true", geocodingBaseUrl, address];
     urlString = [urlString stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
     
-    NSURL *queryUrl = [NSURL URLWithString:urlString];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSError *error = nil;
+    NSURL *queryURL = [NSURL URLWithString:urlString];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:queryURL cachePolicy:NSURLCacheStorageAllowedInMemoryOnly timeoutInterval:10];
+    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         CLLocation *location = nil;
-        
-        NSError *networkError = nil;
-        NSData *responseData = [NSData dataWithContentsOfURL:queryUrl options:NSDataReadingMappedIfSafe error:&networkError];
-        
-        if (responseData && !networkError) {
+        if (data && !error) {
             NSError *jsonError = nil;
-            NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:responseData options:kNilOptions error:&jsonError];
+            NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&jsonError];
             
             if (jsonDictionary && !jsonError) {
                 location = [self locationFromResponseDictionary:jsonDictionary];
@@ -76,56 +76,61 @@
                 error = jsonError;
             }
         }
-        else {
-            error = networkError;
-        }
         
-        dispatch_async(dispatch_get_main_queue(), ^{
+        if ([NSThread isMainThread]) {
             if (completionBlock) {
                 completionBlock(location, error);
             }
-        });
-    });
+        }
+        else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (completionBlock) {
+                    completionBlock(location, error);
+                }
+            });
+        }
+    }];
+    [task resume];
 }
 
-+ (void)reverseGeocodeLocationWithCoordinate:(CLLocationCoordinate2D)coordinate completionBlock:(void (^)(CLPlacemark *, NSError *))completionBlock
++ (void)reverseGeocodeLocationWithCoordinate:(CLLocationCoordinate2D)coordinate completionBlock:(void (^)(GTPlacemark *, NSError *))completionBlock
 {
     NSString *geocodingBaseUrl = @"http://maps.googleapis.com/maps/api/geocode/json?";
     NSString *formattedCoordinateString = [NSString stringWithFormat:@"%f,%f", coordinate.latitude, coordinate.longitude];
     NSString *url = [NSString stringWithFormat:@"%@latlng=%@&sensor=true", geocodingBaseUrl, formattedCoordinateString];
     url = [url stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
     
-    url = [url stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
-    
-    NSURL *queryUrl = [NSURL URLWithString:url];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        CLPlacemark *placemark = nil;
-        NSError *error = nil;
-        
-        NSError *networkError = nil;
-        NSData *responseData = [NSData dataWithContentsOfURL:queryUrl options:NSDataReadingMappedIfSafe error:&networkError];
-        
-        if (responseData && !networkError) {
+    NSURL *queryURL = [NSURL URLWithString:url];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:queryURL cachePolicy:NSURLCacheStorageAllowedInMemoryOnly timeoutInterval:10];
+    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        GTPlacemark *placemark = nil;
+        if (data && !error) {
             NSError *jsonError = nil;
-            NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:responseData options:kNilOptions error:&jsonError];
+            NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
             
             if (jsonDictionary && !jsonError) {
-                // TODO
+                // TODO: missing implementation
             }
             else {
                 error = jsonError;
             }
         }
-        else {
-            error = networkError;
-        }
         
-        dispatch_async(dispatch_get_main_queue(), ^{
+        if ([NSThread isMainThread]) {
             if (completionBlock) {
                 completionBlock(placemark, error);
             }
-        });
-    });
+        }
+        else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (completionBlock) {
+                    completionBlock(placemark, error);
+                }
+            });
+        }
+    }];
+    [task resume];
 }
 
 #pragma mark - Private APIs -
@@ -146,7 +151,7 @@
             if (jsonDictionary && !jsonError) {
                 NSString *status = [jsonDictionary objectForKey:@"status"];
                 if (![status isEqualToString:@"OK"] && ![status isEqualToString:@"ZERO_RESULTS"]) {
-                    error = [NSError errorWithDomain:@"ch.gtran.GTGoogleGeocoder" code:1 userInfo:jsonDictionary];
+                    error = [NSError errorWithDomain:@"com.gtranchedone.GTGoogleGeocoder" code:1 userInfo:jsonDictionary];
                 }
                 else {
                     NSArray *googleResults = [jsonDictionary objectForKey:@"results"];
@@ -176,16 +181,24 @@
             error = networkError;
         }
         
-        dispatch_async(dispatch_get_main_queue(), ^{
+        if ([NSThread isMainThread]) {
             if (completionBlock) {
                 completionBlock(results, error);
             }
-        });
+        }
+        else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (completionBlock) {
+                    completionBlock(results, error);
+                }
+            });
+        }
     }];
     [task resume];
 }
 
-+ (CLLocation *)locationFromResponseDictionary:(NSDictionary *)dictionary {
++ (CLLocation *)locationFromResponseDictionary:(NSDictionary *)dictionary
+{
     NSArray *results = [dictionary objectForKey:@"results"];
     if (results.count) {
         dictionary = [results objectAtIndex:0];
@@ -207,6 +220,12 @@
     else {
         return nil;
     }
+}
+
+- (GTPlacemark *)placemarkFromPlaceResponseDictionary:(NSDictionary *)dictionary
+{
+    // TODO: missing implementation
+    return nil;
 }
 
 @end

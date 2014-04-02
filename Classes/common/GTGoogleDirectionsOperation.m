@@ -1,6 +1,9 @@
 //
 //  GTGoogleDirectionsOperation.m
 //  GTLocation
+//
+//  Created by Gianluca Tranchedone http://gtranchedone.com
+//
 //  The MIT License (MIT)
 //
 //  Copyright (c) 2013 Gianluca Tranchedone
@@ -25,11 +28,13 @@
 
 #import "GTGoogleDirectionsOperation.h"
 
+static NSString * const GTGoogleMapsDirectionsURLFormat = @"http://maps.googleapis.com/maps/api/directions/json?origin=%@&destination=%@&mode=%@&sensor=false";
+
 @implementation GTGoogleDirectionsOperation
 
 #pragma mark - Helpers
 
-+ (NSString *)formattedLocation:(CLLocation *)location
++ (NSString *)formattedStringFromLocation:(CLLocation *)location
 {
     return [NSString stringWithFormat:@"%f,%f", location.coordinate.latitude, location.coordinate.longitude];
 }
@@ -55,52 +60,41 @@
 
 #pragma mark - Superclass Methods Override
 
-//- (BOOL)isExecuting
-//{
-//    return _executing;
-//}
-//
-//- (BOOL)isFinished
-//{
-//    return _finished;
-//}
-
 - (void)main
 {
     if (!self.isCancelled) {
-//        [self startOperation];
-        
-        NSString *directionsBaseUrl = @"http://maps.googleapis.com/maps/api/directions/json?";
-        NSString *url = [NSString stringWithFormat:@"%@origin=%@&destination=%@&sensor=false&mode=%@", directionsBaseUrl,
-                         [self.class formattedLocation:self.origin],
-                         [self.class formattedLocation:self.destination],
-                         NSStringFromGTTravelMode(self.travelMode)];
+        NSString *travelMode = NSStringFromGTTravelMode(self.travelMode);
+        NSString *origin = [self.class formattedStringFromLocation:self.origin];
+        NSString *destination = [self.class formattedStringFromLocation:self.destination];
+        NSString *queryURLString = [NSString stringWithFormat:GTGoogleMapsDirectionsURLFormat, origin, destination, travelMode];
         
         if (self.travelMode == GTTravelModeTransit || (self.departureTime && self.arrivalTime)) {
             if (!self.departureTime) {
                 self.departureTime = [NSDate date];
             }
             
+            NSTimeInterval timeIntervalToArrival = [self.arrivalTime timeIntervalSince1970];
+            NSTimeInterval timeIntervalToDeparture = [self.departureTime timeIntervalSince1970];
+            
             if (self.departureTime && self.arrivalTime) {
-                url = [NSString stringWithFormat:@"%@&departure_time=%.0f&arrival_time=%.0f", url, _departureTime.timeIntervalSince1970, _arrivalTime.timeIntervalSince1970];
+                queryURLString = [NSString stringWithFormat:@"%@&departure_time=%.0f&arrival_time=%.0f", queryURLString, timeIntervalToDeparture, timeIntervalToArrival];
             }
             else if (self.departureTime) {
-                url = [NSString stringWithFormat:@"%@&departure_time=%.0f", url, _departureTime.timeIntervalSince1970];
+                queryURLString = [NSString stringWithFormat:@"%@&departure_time=%.0f", queryURLString, timeIntervalToDeparture];
             }
             else if (self.arrivalTime) {
-                url = [NSString stringWithFormat:@"%@&arrival_time=%.0f", url, _arrivalTime.timeIntervalSince1970];
+                queryURLString = [NSString stringWithFormat:@"%@&arrival_time=%.0f", queryURLString, timeIntervalToArrival];
             }
         }
         
-        url = [url stringByAppendingFormat:@"&alternatives=%@", (self.findAlternativeRoutes ? @"true" : @"false")];
-        url = [url stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
-        NSURL *queryUrl = [NSURL URLWithString:url];
+        queryURLString = [queryURLString stringByAppendingFormat:@"&alternatives=%@", (self.findAlternativeRoutes ? @"true" : @"false")];
+        queryURLString = [queryURLString stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
         
         NSError *error = nil;
         NSArray *results = nil;
-        
         NSError *networkError = nil;
-        NSData *responseData = [NSData dataWithContentsOfURL:queryUrl options:NSDataReadingMappedIfSafe error:&networkError];
+        NSURL *queryURL = [NSURL URLWithString:queryURLString];
+        NSData *responseData = [NSData dataWithContentsOfURL:queryURL options:NSDataReadingMappedIfSafe error:&networkError];
         
         if (responseData && !networkError) {
             NSError *jsonError = nil;
@@ -109,7 +103,7 @@
             if (jsonDictionary && !jsonError) {
                 NSString *status = [jsonDictionary objectForKey:@"status"];
                 if (![status isEqualToString:@"OK"] && ![status isEqualToString:@"ZERO_RESULTS"]) {
-                    error = [NSError errorWithDomain:@"ch.gtran.GTGoogleDirectionsOperation" code:1 userInfo:jsonDictionary];
+                    error = [NSError errorWithDomain:@"com.gtranchedone.GTGoogleDirectionsOperation" code:1 userInfo:jsonDictionary];
                 }
                 else {
                     results = [jsonDictionary objectForKey:@"routes"];
@@ -138,29 +132,6 @@
         
         _error = [error copy];
     }
-    
-//    [self completeOperation];
 }
-
-//- (void)startOperation
-//{
-//    [self willChangeValueForKey:@"isExecuting"];
-//    
-//    _executing = YES;
-//    
-//    [self didChangeValueForKey:@"isExecuting"];
-//}
-//
-//- (void)completeOperation
-//{
-//    [self willChangeValueForKey:@"isFinished"];
-//    [self willChangeValueForKey:@"isExecuting"];
-//    
-//    _finished = YES;
-//    _executing = NO;
-//    
-//    [self didChangeValueForKey:@"isFinished"];
-//    [self didChangeValueForKey:@"isExecuting"];
-//}
 
 @end

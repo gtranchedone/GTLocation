@@ -2,6 +2,8 @@
 //  GTGoogleDirectionsOperation.h
 //  GTLocation
 //
+//  Created by Gianluca Tranchedone http://gtranchedone.com
+//
 //  The MIT License (MIT)
 //
 //  Copyright (c) 2013 Gianluca Tranchedone
@@ -28,32 +30,32 @@
 
 @interface GTGoogleDirectionsOperation : NSOperation
 
-///--------------------------------------------------
-/// @name Setting optional values
-///--------------------------------------------------
+///-------------------------------------------------------
+/// @name Setting the direction's query's optional values
+///-------------------------------------------------------
 
 @property (nonatomic, assign) BOOL findAlternativeRoutes; // default YES
 @property (nonatomic, strong) NSDate *departureTime; // when not set is [NSDate date]
 @property (nonatomic, strong) NSDate *arrivalTime;
 
-///--------------------------------------------------
-/// @name Getting the operation configuration values
-///--------------------------------------------------
+///-------------------------------------------------------
+/// @name Getting the operation's configuration values
+///-------------------------------------------------------
 
 @property (nonatomic, readonly, strong) CLLocation *origin;
 @property (nonatomic, readonly, strong) CLLocation *destination;
 @property (nonatomic, readonly, assign) GTTravelMode travelMode;
 
-///--------------------------------------------------
-/// @name Getting the operation results
-///--------------------------------------------------
+///-------------------------------------------------------
+/// @name Getting the operation's results
+///-------------------------------------------------------
 
 @property (nonatomic, readonly, copy) NSError *error;
 @property (nonatomic, readonly, copy) NSArray *availableRoutes;
 
-///--------------------------------------------------
+///-------------------------------------------------------
 /// @name Creating a directions operation
-///--------------------------------------------------
+///-------------------------------------------------------
 
 + (instancetype)operationWithStartLocation:(CLLocation *)origin destination:(CLLocation *)destination travelMode:(GTTravelMode)travelMode;
 - (instancetype)initWithStartLocation:(CLLocation *)origin destination:(CLLocation *)destination travelMode:(GTTravelMode)travelMode;

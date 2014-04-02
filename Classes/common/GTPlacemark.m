@@ -2,6 +2,8 @@
 //  GTPlacemark.m
 //  GTLocation
 //
+//  Created by Gianluca Tranchedone http://gtranchedone.com
+//
 //  The MIT License (MIT)
 //
 //  Copyright (c) 2013 Gianluca Tranchedone

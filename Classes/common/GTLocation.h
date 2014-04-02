@@ -1,8 +1,9 @@
 //
-//  GTFoundation.h
-//  GTFoundation
+//  GTLocation.h
+//  GTLocation
 //
-//  Created by Gianluca Tranchedone on 14/08/13.
+//  Created by Gianluca Tranchedone http://gtranchedone.com
+//
 //  The MIT License (MIT)
 //
 //  Copyright (c) 2013 Gianluca Tranchedone
@@ -28,6 +29,7 @@
 #import <Availability.h>
 
 #import "GTRoute.h"
+#import "GTPlacemark.h"
 #import "GTGoogleGeocoder.h"
 #import "GTGoogleDirectionsOperation.h"
 
