@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		990D787D18EC604E00D2593A /* GTDemoTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 990D787C18EC604E00D2593A /* GTDemoTableViewController.m */; };
+		990D788618EC60CF00D2593A /* GTMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 990D788518EC60CF00D2593A /* GTMapViewController.m */; };
+		990D788818EC61A800D2593A /* iPhoneStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 990D788718EC61A800D2593A /* iPhoneStoryboard.storyboard */; };
+		9930F6B718EC746D007CD8A1 /* GTDirectionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9930F6B618EC746D007CD8A1 /* GTDirectionsViewController.m */; };
 		9989BA47182CFDB100D8BCDD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9989BA46182CFDB100D8BCDD /* Foundation.framework */; };
 		9989BA49182CFDB100D8BCDD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9989BA48182CFDB100D8BCDD /* CoreGraphics.framework */; };
 		9989BA4B182CFDB100D8BCDD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9989BA4A182CFDB100D8BCDD /* UIKit.framework */; };
@@ -33,6 +37,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		990D787B18EC604E00D2593A /* GTDemoTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTDemoTableViewController.h; sourceTree = "<group>"; };
+		990D787C18EC604E00D2593A /* GTDemoTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTDemoTableViewController.m; sourceTree = "<group>"; };
+		990D788418EC60CF00D2593A /* GTMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMapViewController.h; sourceTree = "<group>"; };
+		990D788518EC60CF00D2593A /* GTMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMapViewController.m; sourceTree = "<group>"; };
+		990D788718EC61A800D2593A /* iPhoneStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhoneStoryboard.storyboard; sourceTree = "<group>"; };
+		9930F6B518EC746D007CD8A1 /* GTDirectionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTDirectionsViewController.h; sourceTree = "<group>"; };
+		9930F6B618EC746D007CD8A1 /* GTDirectionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTDirectionsViewController.m; sourceTree = "<group>"; };
+		9930F6B818EC7642007CD8A1 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		9930F6BA18EC7649007CD8A1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		9989BA43182CFDB100D8BCDD /* GTLocationDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GTLocationDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9989BA46182CFDB100D8BCDD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9989BA48182CFDB100D8BCDD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -101,6 +114,8 @@
 		9989BA45182CFDB100D8BCDD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9930F6BA18EC7649007CD8A1 /* CoreLocation.framework */,
+				9930F6B818EC7642007CD8A1 /* MapKit.framework */,
 				9989BA46182CFDB100D8BCDD /* Foundation.framework */,
 				9989BA48182CFDB100D8BCDD /* CoreGraphics.framework */,
 				9989BA4A182CFDB100D8BCDD /* UIKit.framework */,
@@ -115,6 +130,13 @@
 			children = (
 				9989BA55182CFDB100D8BCDD /* GTAppDelegate.h */,
 				9989BA56182CFDB100D8BCDD /* GTAppDelegate.m */,
+				990D788418EC60CF00D2593A /* GTMapViewController.h */,
+				990D788518EC60CF00D2593A /* GTMapViewController.m */,
+				9930F6B518EC746D007CD8A1 /* GTDirectionsViewController.h */,
+				9930F6B618EC746D007CD8A1 /* GTDirectionsViewController.m */,
+				990D787B18EC604E00D2593A /* GTDemoTableViewController.h */,
+				990D787C18EC604E00D2593A /* GTDemoTableViewController.m */,
+				990D788718EC61A800D2593A /* iPhoneStoryboard.storyboard */,
 				9989BA58182CFDB100D8BCDD /* Images.xcassets */,
 				9989BA4D182CFDB100D8BCDD /* Supporting Files */,
 			);
@@ -230,6 +252,7 @@
 			files = (
 				9989BA51182CFDB100D8BCDD /* InfoPlist.strings in Resources */,
 				9989BA59182CFDB100D8BCDD /* Images.xcassets in Resources */,
+				990D788818EC61A800D2593A /* iPhoneStoryboard.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,7 +304,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				990D788618EC60CF00D2593A /* GTMapViewController.m in Sources */,
 				9989BA53182CFDB100D8BCDD /* main.m in Sources */,
+				9930F6B718EC746D007CD8A1 /* GTDirectionsViewController.m in Sources */,
+				990D787D18EC604E00D2593A /* GTDemoTableViewController.m in Sources */,
 				9989BA57182CFDB100D8BCDD /* GTAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -402,6 +428,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GTLocationDemo/GTLocationDemo-Prefix.pch";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "GTLocationDemo/GTLocationDemo-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -416,6 +443,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GTLocationDemo/GTLocationDemo-Prefix.pch";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "GTLocationDemo/GTLocationDemo-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;

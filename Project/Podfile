@@ -1,1 +1,2 @@
 pod "GTLocation", :path => "../"
+pod 'AFNetworking', '~> 2.2'

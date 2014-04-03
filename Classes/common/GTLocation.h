@@ -30,6 +30,7 @@
 
 #import "GTRoute.h"
 #import "GTPlacemark.h"
+#import "GTMapAnnotation.h"
 #import "GTGoogleGeocoder.h"
 #import "GTGoogleDirectionsOperation.h"
 
