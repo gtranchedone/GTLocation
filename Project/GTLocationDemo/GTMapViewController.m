@@ -20,6 +20,7 @@
 @implementation GTMapViewController
 
 #pragma mark - Superclass Methods Override -
+#pragma mark View Lifecycle
 
 - (void)viewDidLoad
 {

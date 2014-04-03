@@ -32,6 +32,7 @@
 @implementation GTDirectionsViewController
 
 #pragma mark - Superclass Methods Override -
+#pragma mark View Lifecycle
 
 - (void)viewWillDisappear:(BOOL)animated
 {
@@ -187,6 +188,8 @@
                         if ([theCell isEqual:cell] && image) {
                             theCell.imageView.image = image;
                             
+                            // relayout the cell to add and lay out the imageView to the cell's content view if needed
+                            // cells created with Storyboard don't seem to have the image added as subview by default
                             if (!theCell.imageView.superview) {
                                 [theCell setNeedsLayout];
                             }
