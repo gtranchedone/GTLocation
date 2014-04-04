@@ -23,6 +23,7 @@
 		9989BA62182CFDB100D8BCDD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9989BA4A182CFDB100D8BCDD /* UIKit.framework */; };
 		9989BA6A182CFDB100D8BCDD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9989BA68182CFDB100D8BCDD /* InfoPlist.strings */; };
 		9989BA6C182CFDB100D8BCDD /* GTLocationDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9989BA6B182CFDB100D8BCDD /* GTLocationDemoTests.m */; };
+		99BA40FA18EDB15900B41A88 /* GTMapRegionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99BA40F918EDB15900B41A88 /* GTMapRegionViewController.m */; };
 		CD7597400DFA4AC5AE77A084 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D46974BF4B33426F9036F000 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -62,6 +63,8 @@
 		9989BA67182CFDB100D8BCDD /* GTLocationDemoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GTLocationDemoTests-Info.plist"; sourceTree = "<group>"; };
 		9989BA69182CFDB100D8BCDD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9989BA6B182CFDB100D8BCDD /* GTLocationDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GTLocationDemoTests.m; sourceTree = "<group>"; };
+		99BA40F818EDB15900B41A88 /* GTMapRegionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMapRegionViewController.h; sourceTree = "<group>"; };
+		99BA40F918EDB15900B41A88 /* GTMapRegionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMapRegionViewController.m; sourceTree = "<group>"; };
 		A66996DB1A834D5AAAF06679 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		D46974BF4B33426F9036F000 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -136,6 +139,8 @@
 				9930F6B618EC746D007CD8A1 /* GTDirectionsViewController.m */,
 				990D787B18EC604E00D2593A /* GTDemoTableViewController.h */,
 				990D787C18EC604E00D2593A /* GTDemoTableViewController.m */,
+				99BA40F818EDB15900B41A88 /* GTMapRegionViewController.h */,
+				99BA40F918EDB15900B41A88 /* GTMapRegionViewController.m */,
 				990D788718EC61A800D2593A /* iPhoneStoryboard.storyboard */,
 				9989BA58182CFDB100D8BCDD /* Images.xcassets */,
 				9989BA4D182CFDB100D8BCDD /* Supporting Files */,
@@ -306,6 +311,7 @@
 			files = (
 				990D788618EC60CF00D2593A /* GTMapViewController.m in Sources */,
 				9989BA53182CFDB100D8BCDD /* main.m in Sources */,
+				99BA40FA18EDB15900B41A88 /* GTMapRegionViewController.m in Sources */,
 				9930F6B718EC746D007CD8A1 /* GTDirectionsViewController.m in Sources */,
 				990D787D18EC604E00D2593A /* GTDemoTableViewController.m in Sources */,
 				9989BA57182CFDB100D8BCDD /* GTAppDelegate.m in Sources */,

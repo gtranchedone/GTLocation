@@ -55,6 +55,26 @@
                                             <segue destination="Fcn-iZ-Cu7" kind="push" id="fOL-M7-tZU"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="Plj-bb-Mig" style="IBUITableViewCellStyleDefault" id="oys-3T-iHE">
+                                        <rect key="frame" x="0.0" y="152" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oys-3T-iHE" id="URD-yW-UUT">
+                                            <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Region" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Plj-bb-Mig">
+                                                    <rect key="frame" x="15" y="0.0" width="270" height="43"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="mif-xX-dHj" kind="push" id="fUR-Ku-mjn"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -68,6 +88,68 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9YO-xn-Ff0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="580" y="49"/>
+        </scene>
+        <!--Map Region View Controller - Region-->
+        <scene sceneID="Iv7-fT-LbD">
+            <objects>
+                <viewController id="mif-xX-dHj" customClass="GTMapRegionViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="i0V-Nx-6ZQ"/>
+                        <viewControllerLayoutGuide type="bottom" id="glH-9P-wzS"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Wcm-TV-bLh">
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="OhS-MR-dd0">
+                                <rect key="frame" x="0.0" y="84" width="320" height="420"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <connections>
+                                    <outlet property="delegate" destination="mif-xX-dHj" id="pbt-nF-ESi"/>
+                                </connections>
+                            </mapView>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="KKq-yr-e9b">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="mif-xX-dHj" id="cS5-T6-cxq"/>
+                                </connections>
+                            </searchBar>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Distance" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="W15-eF-2UN">
+                                <rect key="frame" x="20" y="49" width="280" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="numberPad" returnKeyType="done"/>
+                                <connections>
+                                    <outlet property="delegate" destination="mif-xX-dHj" id="B1h-fi-k5c"/>
+                                </connections>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="W15-eF-2UN" firstAttribute="leading" secondItem="Wcm-TV-bLh" secondAttribute="leading" constant="20" symbolic="YES" id="27B-0F-oQx"/>
+                            <constraint firstItem="KKq-yr-e9b" firstAttribute="leading" secondItem="Wcm-TV-bLh" secondAttribute="leading" id="4We-72-Pgk"/>
+                            <constraint firstItem="KKq-yr-e9b" firstAttribute="top" secondItem="i0V-Nx-6ZQ" secondAttribute="bottom" id="4kp-e3-lxh"/>
+                            <constraint firstAttribute="trailing" secondItem="W15-eF-2UN" secondAttribute="trailing" constant="20" symbolic="YES" id="RCR-Xw-2UO"/>
+                            <constraint firstAttribute="trailing" secondItem="OhS-MR-dd0" secondAttribute="trailing" id="RKz-gT-raC"/>
+                            <constraint firstItem="W15-eF-2UN" firstAttribute="top" secondItem="KKq-yr-e9b" secondAttribute="bottom" constant="5" id="VAc-AC-wXr"/>
+                            <constraint firstAttribute="trailing" secondItem="KKq-yr-e9b" secondAttribute="trailing" id="fBd-uH-u4d"/>
+                            <constraint firstItem="OhS-MR-dd0" firstAttribute="leading" secondItem="Wcm-TV-bLh" secondAttribute="leading" id="gXh-7b-Nhf"/>
+                            <constraint firstItem="OhS-MR-dd0" firstAttribute="top" secondItem="W15-eF-2UN" secondAttribute="bottom" constant="5" id="nI0-fj-bvH"/>
+                            <constraint firstItem="glH-9P-wzS" firstAttribute="top" secondItem="OhS-MR-dd0" secondAttribute="bottom" id="qIq-7e-edH"/>
+                        </constraints>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <navigationItem key="navigationItem" title="Region" id="xtB-Nj-iwT"/>
+                    <connections>
+                        <outlet property="distanceTextField" destination="W15-eF-2UN" id="TLJ-Oc-OJ0"/>
+                        <outlet property="mapView" destination="OhS-MR-dd0" id="YZY-IN-kaT"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="f8O-KT-cVW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1121" y="763"/>
         </scene>
         <!--Directions View Controller - Get Directions-->
         <scene sceneID="CM7-t7-kCm">
@@ -280,6 +362,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="5aU-YJ-Cks"/>
+        <segue reference="fOL-M7-tZU"/>
     </inferredMetricsTieBreakers>
 </document>
