@@ -27,6 +27,9 @@
 //
 
 #import "GTRoute.h"
+#import <objc/runtime.h>
+
+static NSString * GTEncodedDictionaryValueKey = @"GTEncodedDictionaryValueKey";
 
 inline GTTravelMode GTTravelModeFromNSString(NSString *string)
 {
@@ -202,7 +205,48 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
     }
 }
 
+@interface GTRouteStep ()
+
+@property (nonatomic, readwrite, strong) CLLocation *startLocation;
+@property (nonatomic, readwrite, strong) CLLocation *endLocation;
+@property (nonatomic, readwrite, assign) GTTravelMode travelMode;
+
+@property (nonatomic, readwrite, copy) NSString *instructions;
+@property (nonatomic, readwrite, copy) NSDictionary *travelInfo;
+@property (nonatomic, readwrite, assign) CLLocationDistance distance;
+@property (nonatomic, readwrite, assign) GTTravelModeVehicleType vehicleType;
+@property (nonatomic, readwrite, assign) NSTimeInterval expectedTravelDuration;
+
+@end
+
 @implementation GTRouteStep
+
+#pragma mark - Superclass Methods Override -
+#pragma mark Description
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"%p <%@> %@", &self, NSStringFromClass([self class]), [[self dictionaryValue] description]];
+}
+
+#pragma mark Equality
+
+- (NSUInteger)hash
+{
+    return [[self dictionaryValue] hash];
+}
+
+- (BOOL)isEqual:(id)object
+{
+    BOOL isEqual = [super isEqual:object];
+    if (!isEqual && [object isKindOfClass:[self class]]) {
+        isEqual = [[self dictionaryValue] isEqualToDictionary:[object dictionaryValue]];
+    }
+    
+    return isEqual;
+}
+
+#pragma mark - Public APIs -
 
 + (instancetype)routeStepWithStepDictionary:(NSDictionary *)dictionary
 {
@@ -218,30 +262,29 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super init];
-    if (self) {
-        _distance = [aDecoder decodeDoubleForKey:NSStringFromSelector(@selector(distance))];
-        _travelMode = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(travelMode))];
-        _endLocation = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(endLocation))];
-        _vehicleType = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(vehicleType))];
-        _startLocation = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(startLocation))];
-        _instructions = [[aDecoder decodeObjectForKey:NSStringFromSelector(@selector(instructions))] copy];
-        _expectedTravelDuration = [aDecoder decodeDoubleForKey:NSStringFromSelector(@selector(expectedTravelDuration))];
-    }
-    return self;
-}
+#pragma mark - Private APIs -
 
-- (void)encodeWithCoder:(NSCoder *)aCoder
+- (NSDictionary *)dictionaryValue
 {
-    [aCoder encodeDouble:_distance forKey:NSStringFromSelector(@selector(distance))];
-    [aCoder encodeInteger:_travelMode forKey:NSStringFromSelector(@selector(travelMode))];
-    [aCoder encodeObject:_endLocation forKey:NSStringFromSelector(@selector(endLocation))];
-    [aCoder encodeInteger:_vehicleType forKey:NSStringFromSelector(@selector(vehicleType))];
-    [aCoder encodeObject:_instructions forKey:NSStringFromSelector(@selector(instructions))];
-    [aCoder encodeObject:_startLocation forKey:NSStringFromSelector(@selector(startLocation))];
-    [aCoder encodeDouble:_expectedTravelDuration forKey:NSStringFromSelector(@selector(expectedTravelDuration))];
+    NSMutableArray *propertyKeys = [NSMutableArray array];
+    Class currentClass = self.class;
+    
+    while ([currentClass superclass]) { // avoid printing NSObject's attributes
+        unsigned int outCount, i;
+        objc_property_t *properties = class_copyPropertyList(currentClass, &outCount);
+        for (i = 0; i < outCount; i++) {
+            objc_property_t property = properties[i];
+            const char *propName = property_getName(property);
+            if (propName) {
+                NSString *propertyName = [NSString stringWithUTF8String:propName];
+                [propertyKeys addObject:propertyName];
+            }
+        }
+        free(properties);
+        currentClass = [currentClass superclass];
+    }
+    
+    return [self dictionaryWithValuesForKeys:propertyKeys];
 }
 
 - (void)configureWithDictionary:(NSDictionary *)dictionary
@@ -278,15 +321,148 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
     }
 }
 
-- (NSString *)description
+#pragma mark - NSCoding -
+
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
-    return [NSString stringWithFormat:@"<%@: %p> {travelMode:%@, duration: %.0fs, distance: %.0fm, instructions: %@}", NSStringFromClass(self.class), &self, NSStringFromGTTravelMode(self.travelMode), self.expectedTravelDuration, self.distance, self.instructions];
+    self = [super init];
+    if (self) {
+        NSDictionary *storedDictionary = [aDecoder decodeObjectForKey:GTEncodedDictionaryValueKey];
+        [self setValuesForKeysWithDictionary:storedDictionary];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:[self dictionaryValue] forKey:GTEncodedDictionaryValueKey];
+}
+
+#pragma mark - NSCopying -
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    NSDictionary *dictionaryValue = [self dictionaryValue];
+    GTRouteStep *routeStep = [[GTRouteStep alloc] init];
+    
+    [dictionaryValue enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if ([obj respondsToSelector:@selector(copy)]) {
+            [routeStep setValue:[obj copy] forKey:key];
+        }
+        else {
+            [routeStep setValue:obj forKeyPath:key];
+        }
+    }];
+    
+    return routeStep;
+}
+
+#pragma mark - NSMutableCopying -
+
+- (id)mutableCopyWithZone:(NSZone *)zone
+{
+    NSDictionary *dictionaryValue = [self dictionaryValue];
+    GTMutableRouteStep *routeStep = [[GTMutableRouteStep alloc] init];
+    
+    [dictionaryValue enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if ([obj respondsToSelector:@selector(copy)]) {
+            [routeStep setValue:[obj copy] forKey:key];
+        }
+        else {
+            [routeStep setValue:obj forKeyPath:key];
+        }
+    }];
+    
+    return routeStep;
 }
 
 @end
 
+@implementation GTMutableRouteStep
+
+- (void)setStartLocation:(CLLocation *)location
+{
+    [super setStartLocation:location];
+}
+
+- (void)setEndLocation:(CLLocation *)location
+{
+    [super setEndLocation:location];
+}
+
+- (void)setTravelMode:(GTTravelMode)travelMode
+{
+    [super setTravelMode:travelMode];
+}
+
+- (void)setInstructions:(NSString *)instructions
+{
+    [super setInstructions:instructions];
+}
+
+- (void)setTravelInfo:(NSDictionary *)travelInfo
+{
+    [super setTravelInfo:travelInfo];
+}
+
+- (void)setDistance:(CLLocationDistance)distance
+{
+    [super setDistance:distance];
+}
+
+- (void)setVehicleType:(GTTravelModeVehicleType)vehicleType
+{
+    [super setVehicleType:vehicleType];
+}
+
+- (void)setExpectedTravelDuration:(NSTimeInterval)travelDuration
+{
+    [super setExpectedTravelDuration:travelDuration];
+}
+
+@end
+
+@interface GTRoute ()
+
+@property (nonatomic, readwrite, strong) CLLocation *startLocation;
+@property (nonatomic, readwrite, strong) CLLocation *endLocation;
+@property (nonatomic, readwrite, assign) GTTravelMode travelMode;
+
+@property (nonatomic, readwrite, copy) NSArray *steps;
+@property (nonatomic, readwrite, strong) MKPolyline *polyline;
+@property (nonatomic, readwrite, copy) NSString *gMapsPolyline;
+@property (nonatomic, readwrite, assign) NSTimeInterval expectedTravelDuration;
+
+@end
 
 @implementation GTRoute
+
+#pragma mark - Superclass Methods Override -
+#pragma mark Description
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"%p <%@> %@", &self, NSStringFromClass([self class]), [[self dictionaryValue] description]];
+}
+
+#pragma mark Equality
+
+- (NSUInteger)hash
+{
+    return [[self dictionaryValue] hash];
+}
+
+- (BOOL)isEqual:(id)object
+{
+    BOOL isEqual = [super isEqual:object];
+    if (!isEqual && [object isKindOfClass:[self class]]) {
+        isEqual = [[self dictionaryValue] isEqualToDictionary:[object dictionaryValue]];
+    }
+    
+    return isEqual;
+}
+
+#pragma mark - Public APIs -
 
 + (instancetype)routeWithSteps:(NSArray *)steps travelMode:(GTTravelMode)travelMode
 {
@@ -307,76 +483,138 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
 {
     self = [super init];
     if (self) {
-        BOOL stepsAreValid = YES;
-        for (id step in steps) {
-            if (![step isKindOfClass:[GTRouteStep class]]) {
-                stepsAreValid = NO;
-                break;
-            }
-            else {
-                _expectedTravelDuration += ((GTRouteStep *)step).expectedTravelDuration;
-            }
-        }
+        self.steps = steps;
+        self.travelMode = travelMode;
         
-        if (stepsAreValid) {
-            if (polyline) {
-                if ([polyline isKindOfClass:[NSString class]]) {
-                    _gMapsPolyline = [polyline copy];
-                }
-                else if ([polyline isKindOfClass:[MKPolyline class]]) {
-                    _polyline = polyline;
-                }
+        if (polyline) {
+            if ([polyline isKindOfClass:[NSString class]]) {
+                self.gMapsPolyline = [polyline copy];
             }
-            
-            _steps = [steps copy];
-            _travelMode = travelMode;
-            _endLocation = [[_steps lastObject] endLocation];
-            _startLocation = [[_steps firstObject] startLocation];
-        }
-        else {
-            [NSException raise:@"ch.gtran.GTRoute" format:@"Attempt to initialize a GTRoute object with instances of classes other than GTRouteStep: %@", steps];
+            else if ([polyline isKindOfClass:[MKPolyline class]]) {
+                self.polyline = polyline;
+            }
         }
     }
     return self;
 }
 
+- (void)setSteps:(NSArray *)steps
+{
+    BOOL stepsAreValid = YES;
+    for (id step in steps) {
+        if (![step isKindOfClass:[GTRouteStep class]]) {
+            stepsAreValid = NO;
+            break;
+        }
+        else {
+            _expectedTravelDuration += ((GTRouteStep *)step).expectedTravelDuration;
+        }
+    }
+    
+    if (stepsAreValid) {
+        _steps = [steps copy];
+        _endLocation = [[_steps lastObject] endLocation];
+        _startLocation = [[_steps firstObject] startLocation];
+    }
+    else {
+        [NSException raise:@"com.gtranchedone.GTRoute" format:@"Attempt to initialize a GTRoute object with instances of classes other than GTRouteStep: %@", steps];
+    }
+}
+
+#pragma mark - Private APIs -
+
+- (NSDictionary *)dictionaryValue
+{
+    NSMutableArray *propertyKeys = [NSMutableArray array];
+    Class currentClass = self.class;
+    
+    while ([currentClass superclass]) { // avoid printing NSObject's attributes
+        unsigned int outCount, i;
+        objc_property_t *properties = class_copyPropertyList(currentClass, &outCount);
+        for (i = 0; i < outCount; i++) {
+            objc_property_t property = properties[i];
+            const char *propName = property_getName(property);
+            if (propName) {
+                NSString *propertyName = [NSString stringWithUTF8String:propName];
+                [propertyKeys addObject:propertyName];
+            }
+        }
+        free(properties);
+        currentClass = [currentClass superclass];
+    }
+    
+    return [self dictionaryWithValuesForKeys:propertyKeys];
+}
+
+#pragma mark - NSCoding -
+
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super init];
     if (self) {
-        _steps = [[aDecoder decodeObjectForKey:NSStringFromSelector(@selector(steps))] copy];
-        _travelMode = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(travelMode))];
-        _endLocation = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(endLocation))];
-        _startLocation = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(startLocation))];
-        _gMapsPolyline = [[aDecoder decodeObjectForKey:NSStringFromSelector(@selector(gMapsPolyline))] copy];
-        _expectedTravelDuration = [aDecoder decodeDoubleForKey:NSStringFromSelector(@selector(expectedTravelDuration))];
+        NSDictionary *storedDictionary = [aDecoder decodeObjectForKey:GTEncodedDictionaryValueKey];
+        [self setValuesForKeysWithDictionary:storedDictionary];
     }
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeObject:_steps forKey:NSStringFromSelector(@selector(steps))];
-    [aCoder encodeInteger:_travelMode forKey:NSStringFromSelector(@selector(travelMode))];
-    [aCoder encodeObject:_endLocation forKey:NSStringFromSelector(@selector(endLocation))];
-    [aCoder encodeObject:_startLocation forKey:NSStringFromSelector(@selector(startLocation))];
-    [aCoder encodeObject:_gMapsPolyline forKey:NSStringFromSelector(@selector(gMapsPolyline))];
-    [aCoder encodeDouble:_expectedTravelDuration forKey:NSStringFromSelector(@selector(expectedTravelDuration))];
+    [aCoder encodeObject:[self dictionaryValue] forKey:GTEncodedDictionaryValueKey];
 }
 
-- (NSString *)description
+#pragma mark - NSCopying -
+
+- (id)copyWithZone:(NSZone *)zone
 {
-    NSMutableString *string = [[NSMutableString alloc] init];
-    [string appendFormat:@"<%@: %p> {\n\tstartPoint:%@,\n\tendPoint:%@,\n\ttravelMode:%d,\n\tduration:%.1f,\n\tsteps: [", NSStringFromClass(self.class), &self, self.startLocation, self.endLocation, (int)self.travelMode, self.expectedTravelDuration];
+    NSDictionary *dictionaryValue = [[self dictionaryValue] copy];
+    GTRoute *route = [[GTRoute alloc] init];
     
-    for (GTRouteStep *step in self.steps) {
-        [string appendFormat:@"\n\t\t%@", step.description];
-    }
+    [dictionaryValue enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if ([obj respondsToSelector:@selector(copy)]) {
+            [route setValue:[obj copy] forKey:key];
+        }
+        else {
+            if ([obj isKindOfClass:[MKPolyline class]]) {
+                MKPolyline *polyline = (MKPolyline *)obj;
+                MKPolyline *copiedPolyline = [MKPolyline polylineWithPoints:polyline.points count:polyline.pointCount];
+                [route setValue:copiedPolyline forKeyPath:key];
+            }
+            else {
+                [route setValue:obj forKeyPath:key];
+            }
+        }
+    }];
     
-    [string appendString:@"\n\t]\n}"];
-    
-    return [string copy];
+    return route;
 }
+
+#pragma mark - NSMutableCopying -
+
+- (id)mutableCopyWithZone:(NSZone *)zone
+{
+    NSDictionary *dictionaryValue = [[self dictionaryValue] copy];
+    GTMutableRoute *route = [[GTMutableRoute alloc] init];
+    
+    [dictionaryValue enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if ([obj respondsToSelector:@selector(copy)]) {
+            [route setValue:[obj copy] forKey:key];
+        }
+        else {
+            if ([obj isKindOfClass:[MKPolyline class]]) {
+                MKPolyline *polyline = (MKPolyline *)obj;
+                MKPolyline *copiedPolyline = [MKPolyline polylineWithPoints:polyline.points count:polyline.pointCount];
+                [route setValue:copiedPolyline forKeyPath:key];
+            }
+            else {
+                [route setValue:obj forKeyPath:key];
+            }
+        }
+    }];
+    
+    return route;
+}
+#pragma mark - Setters and Getters -
 
 // MKPolyline and it's superclasses do not conform to the NSCoding protocol, therefore, if the self was initialized with initWithCoder: will not have the polyline set.
 - (MKPolyline *)polyline
@@ -402,6 +640,30 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
     }
     
     return _polyline;
+}
+
+@end
+
+@implementation GTMutableRoute
+
+- (void)setSteps:(NSArray *)steps
+{
+    [super setSteps:steps];
+}
+
+- (void)setTravelMode:(GTTravelMode)travelMode
+{
+    [super setTravelMode:travelMode];
+}
+
+- (void)setPolyline:(id)polyline
+{
+    [super setPolyline:polyline];
+}
+
+- (void)setGMapsPolyline:(NSString *)gMapsPolyline
+{
+    [super setGMapsPolyline:gMapsPolyline];
 }
 
 @end

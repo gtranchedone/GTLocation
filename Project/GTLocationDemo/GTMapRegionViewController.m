@@ -13,6 +13,8 @@
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UITextField *distanceTextField;
 
+@property (strong, nonatomic) CLLocation *location;
+
 @end
 
 @implementation GTMapRegionViewController
@@ -40,6 +42,7 @@
     [searchBar resignFirstResponder];
     [GTGoogleGeocoder geocodeAddress:searchBar.text withCompletionBlock:^(CLLocation *location, NSError *error) {
         [self.mapView setCenterCoordinate:location.coordinate animated:YES];
+        [self setLocation:location];
     }];
 }
 
@@ -51,7 +54,7 @@
     [self.mapView removeOverlays:self.mapView.overlays];
     [self.mapView removeAnnotations:self.mapView.annotations];
     
-    MKCircle *circle = [MKCircle circleWithCenterCoordinate:self.mapView.centerCoordinate radius:[textField.text doubleValue]];
+    MKCircle *circle = [MKCircle circleWithCenterCoordinate:self.location.coordinate radius:[textField.text doubleValue]];
     [self.mapView addAnnotation:circle];
     [self.mapView addOverlay:circle];
     

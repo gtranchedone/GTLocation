@@ -160,7 +160,7 @@ FOUNDATION_EXTERN NSString * NSStringFromGTTravelModeVehicleType(GTTravelModeVeh
 /**
  @abstract A GTRouteStep object represents a piace of directions to get from one location to another with a given travel mode.
  */
-@interface GTRouteStep : NSObject <NSCoding>
+@interface GTRouteStep : NSObject <NSCoding, NSCopying, NSMutableCopying>
 
 /// The start location of the route step.
 @property (nonatomic, readonly, strong) CLLocation *startLocation;
@@ -188,7 +188,8 @@ FOUNDATION_EXTERN NSString * NSStringFromGTTravelModeVehicleType(GTTravelModeVeh
  *  @abstract Creates and returns a new GTRouteStep object initialized with the contents of the passed-in dictionary.
  *  @see -[GTRouteStep initWithStepDictionary:]
  *
- *  @param dictionary A dictionary containing the informations needed for the user to go from a location to another. The dictionary format shall match the Google Directions APIs for a route's step.
+ *  @param dictionary A dictionary containing the informations needed for the user to go from a location to another.
+ *  The dictionary format shall match the Google Directions APIs for a route's step.
  *
  *  @return Returns a new GTRouteStep object initialized with the contents of the passed-in dictionary.
  */
@@ -197,7 +198,8 @@ FOUNDATION_EXTERN NSString * NSStringFromGTTravelModeVehicleType(GTTravelModeVeh
 /**
  *  @abstract Creates and returns a new GTRouteStep object initialized with the contents of the passed-in dictionary.
  *
- *  @param dictionary A dictionary containing the informations needed for the user to go from a location to another. The dictionary format shall match the Google Directions APIs for a route's step.
+ *  @param dictionary A dictionary containing the informations needed for the user to go from a location to another.
+ *  The dictionary format shall match the Google Directions APIs for a route's step.
  *
  *  @return Returns a new GTRouteStep object initialized with the contents of the passed-in dictionary.
  */
@@ -205,11 +207,25 @@ FOUNDATION_EXTERN NSString * NSStringFromGTTravelModeVehicleType(GTTravelModeVeh
 
 @end
 
+@interface GTMutableRouteStep : GTRouteStep
+
+- (void)setStartLocation:(CLLocation *)location;
+- (void)setEndLocation:(CLLocation *)location;
+- (void)setTravelMode:(GTTravelMode)travelMode;
+
+- (void)setInstructions:(NSString *)instructions;
+- (void)setTravelInfo:(NSDictionary *)travelInfo;
+- (void)setDistance:(CLLocationDistance)distance;
+- (void)setVehicleType:(GTTravelModeVehicleType)vehicleType;
+- (void)setExpectedTravelDuration:(NSTimeInterval)travelDuration;
+
+@end
+
 /**
  @abstract GTRoute represents a route with directions to go from one location to another with a certain travel mode.
  @discussion A route is composed by smaller steps. This are instances of the GTRouteStep class.
  */
-@interface GTRoute : NSObject <NSCoding> {
+@interface GTRoute : NSObject <NSCoding, NSCopying, NSMutableCopying> {
     @private
     MKPolyline *_polyline;
 }
@@ -290,5 +306,15 @@ FOUNDATION_EXTERN NSString * NSStringFromGTTravelModeVehicleType(GTTravelModeVeh
  *  @return A newly created GTRoute object initialized with the passed-in values.
  */
 - (instancetype)initWithSteps:(NSArray *)steps travelMode:(GTTravelMode)travelMode polyline:(id)polyline;
+
+@end
+
+@interface GTMutableRoute : GTRoute
+
+- (void)setSteps:(NSArray *)steps;
+- (void)setTravelMode:(GTTravelMode)travelMode;
+
+- (void)setPolyline:(id)polyline;
+- (void)setGMapsPolyline:(NSString *)gMapsPolyline;
 
 @end

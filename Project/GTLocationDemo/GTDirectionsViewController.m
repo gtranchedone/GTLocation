@@ -16,7 +16,7 @@
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
 @property (nonatomic, strong) CLLocation *startLocation;
 @property (nonatomic, strong) CLLocation *endLocation;
-@property (nonatomic, strong) GTRoute *route;
+@property (nonatomic, copy) GTRoute *route;
 
 @property (nonatomic, weak) id locationRequester;
 @property (nonatomic, weak) MKPolyline *routePolyline;
