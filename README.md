@@ -1,4 +1,5 @@
-# GTLocation
+GTLocation
+==========
 
 [![Build Status](https://travis-ci.org/gtranchedone/GTLocation.png)](https://travis-ci.org/gtranchedone/GTLocation)
 [![Version](http://cocoapod-badges.herokuapp.com/v/GTLocation/badge.png)](http://cocoadocs.org/docsets/GTLocation)
@@ -12,14 +13,14 @@ To run the example project; clone the repo, and run `pod install` from the Proje
 
 ## Requirements
 
-GTLocation requires the CoreLocation framework and the GTFoundation Pod. When installing GTLocation as a Pod as described in the the paragraph this dependencies are fulfilled for you. 
+GTLocation requires iOS 7+ or OS X 10.9+. 
 
 ## Installation
 
 GTLocation is available through [CocoaPods](http://cocoapods.org), to install
 it simply add the following line to your Podfile:
 
-    pod "GTLocation", '~> 0.0.1'
+    pod "GTLocation", '~> 0.1.0'
 
 ## License
 

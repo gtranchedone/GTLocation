@@ -45,3 +45,5 @@
 + (void)reverseGeocodeLocationWithCoordinate:(CLLocationCoordinate2D)coordinate completionBlock:(void (^)(GTPlacemark *placemark, NSError *error))completionBlock __unavailable;
 
 @end
+
+FOUNDATION_EXTERN NSString * const GTGoogleGeocoderErrorDomain;
