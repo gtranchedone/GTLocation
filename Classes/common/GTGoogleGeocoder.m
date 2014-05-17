@@ -35,21 +35,45 @@
 
 + (void)searchLocationsMatchingAddress:(NSString *)address apiKey:(NSString *)apiKey completionBlock:(void (^)(NSArray *results, NSError *error))completionBlock
 {
-    [self searchLocationsMatchingAddress:address nearLocation:nil apiKey:apiKey completionBlock:completionBlock];
+	NSString *geocodingBaseUrl = @"https://maps.googleapis.com/maps/api/place/textsearch/json?";
+	NSString *stringURL = [NSString stringWithFormat:@"%@query=%@&language=en&sensor=true&key=%@", geocodingBaseUrl, address, apiKey];
+
+	stringURL = [stringURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+
+	[self performQueryWithURL:[NSURL URLWithString:stringURL] address:address completionBlock:completionBlock];
 }
 
 + (void)searchLocationsMatchingAddress:(NSString *)address nearLocation:(CLLocation *)location apiKey:(NSString *)apiKey completionBlock:(void (^)(NSArray *results, NSError *error))completionBlock
 {
-    NSString *geocodingBaseUrl = @"https://maps.googleapis.com/maps/api/place/textsearch/json?";
-    NSString *stringURL = [NSString stringWithFormat:@"%@query=%@&language=en&sensor=true&key=%@", geocodingBaseUrl, address, apiKey];
-    
-    if (location) {
-        stringURL = [stringURL stringByAppendingFormat:@"&location=%f,%f&radius=50000", location.coordinate.latitude, location.coordinate.longitude];
+    if (!location) {
+        [self searchLocationsMatchingAddress:address apiKey:apiKey completionBlock:completionBlock];
     }
-    
-    stringURL = [stringURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
-    [self performQueryWithURL:[NSURL URLWithString:stringURL] address:address completionBlock:completionBlock];
+    else {
+        CLLocationCoordinate2D coordinate = location.coordinate;
+        NSString *geocodingBaseUrl = @"https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
+        NSString *stringURL = [NSString stringWithFormat:@"%@keyword=%@&language=en&sensor=true&key=%@", geocodingBaseUrl, address, apiKey];
+        stringURL = [stringURL stringByAppendingFormat:@"&location=%f,%f&radius=50000", coordinate.latitude, coordinate.longitude];
+        stringURL = [stringURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        
+        [self performQueryWithURL:[NSURL URLWithString:stringURL] address:address completionBlock:^(NSArray *results, NSError *error) {
+            if (!error && !results.count) {
+                NSError *err = nil;
+                NSDataDetector *addressDetector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeAddress error:&err];
+                
+                if (!err && [addressDetector numberOfMatchesInString:address options:NSMatchingReportCompletion range:NSMakeRange(0, address.length)]) {
+                    [self geocodeAddress:address withCompletionBlock:^(CLLocation *theLocation, NSError *theError) {
+                        if (completionBlock) {
+                            NSArray *theResults = theLocation ? @[theLocation] : @[];
+                            completionBlock(theResults, theError);
+                        }
+                    }];
+                }
+            }
+            else if (completionBlock) {
+                completionBlock(results, error);
+            }
+        }];
+    }
 }
 
 #pragma mark Google Maps APIs
@@ -64,7 +88,9 @@
         CLLocation *location = nil;
         if (data && !error) {
             NSError *jsonError = nil;
-            NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&jsonError];
+            NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:data
+                                                                           options:NSJSONReadingAllowFragments
+	                                                                         error:&jsonError];
             
             if (jsonDictionary && !jsonError) {
                 location = [self locationFromResponseDictionary:jsonDictionary];
@@ -73,12 +99,12 @@
                 error = jsonError;
             }
         }
-        
-        [self performBlockOnMainThread:^{
-            if (completionBlock) {
-                completionBlock(location, error);
-            }
-        }];
+
+	    if (completionBlock) {
+		    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+			    completionBlock(location, error);
+		    }];
+	    }
     }];
 }
 
@@ -96,18 +122,18 @@
             NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
             
             if (jsonDictionary && !jsonError) {
-                // TODO: missing implementation
+                placemark = [self placemarkFromPlaceResponseDictionary:jsonDictionary];
             }
             else {
                 error = jsonError;
             }
         }
-        
-        [self performBlockOnMainThread:^{
-            if (completionBlock) {
-                completionBlock(placemark, error);
-            }
-        }];
+
+	    if (completionBlock) {
+		    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+			    completionBlock(placemark, error);
+		    }];
+	    }
     }];
 }
 
@@ -133,7 +159,9 @@
         
         if (responseData && !networkError) {
             NSError *jsonError = nil;
-            NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:responseData options:kNilOptions error:&jsonError];
+            NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:responseData
+                                                                           options:NSJSONReadingAllowFragments
+	                                                                         error:&jsonError];
             
             if (jsonDictionary && !jsonError) {
                 NSString *status = [jsonDictionary objectForKey:@"status"];
@@ -147,14 +175,14 @@
                         __block NSInteger numberOfMatches = 0;
                         NSString *name = [[obj objectForKey:@"name"] lowercaseString];
                         
-                        [name enumerateSubstringsInRange:NSMakeRange(0, name.length) options:NSStringEnumerationByWords usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+                        [name enumerateSubstringsInRange:NSMakeRange(0, name.length) options:NSStringEnumerationByWords usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *shouldStop) {
                             numberOfWords++;
                             if ([address rangeOfString:substring].location != NSNotFound) {
                                 numberOfMatches++;
                             }
                         }];
                         
-                        if (numberOfMatches > (numberOfWords / 2)) {
+                        if ((numberOfWords == numberOfMatches) || numberOfMatches >= (NSInteger)floorf(numberOfWords / 2.0)) {
                             [results addObject:[self locationFromResponseDictionary:obj]];
                         }
                     }];
@@ -167,12 +195,12 @@
         else {
             error = networkError;
         }
-        
-        [self performBlockOnMainThread:^{
-            if (completionBlock) {
-                completionBlock(results, error);
-            }
-        }];
+
+	    if (completionBlock) {
+		    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+			    completionBlock(results, error);
+		    }];
+	    }
     }];
 }
 
@@ -204,20 +232,6 @@
     }
     else {
         return nil;
-    }
-}
-
-+ (void)performBlockOnMainThread:(void (^)(void))block
-{
-    if (block) {
-        if ([NSThread isMainThread]) {
-            block();
-        }
-        else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                block();
-            });
-        }
     }
 }
 

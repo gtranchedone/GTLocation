@@ -38,7 +38,7 @@
 + (void)searchLocationsMatchingAddress:(NSString *)address nearLocation:(CLLocation *)location apiKey:(NSString *)apiKey completionBlock:(void (^)(NSArray *results, NSError *error))completionBlock;
 
 ///--------------------------------------------------
-/// @name Google Maps APIs
+/// @name Google Geocoder APIs
 ///--------------------------------------------------
 
 + (void)geocodeAddress:(NSString *)address withCompletionBlock:(void (^)(CLLocation *location, NSError *error))completionBlock;

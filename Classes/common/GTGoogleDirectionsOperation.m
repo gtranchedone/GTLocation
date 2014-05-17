@@ -98,7 +98,9 @@ static NSString * const GTGoogleMapsDirectionsURLFormat = @"http://maps.googleap
         
         if (responseData && !networkError) {
             NSError *jsonError = nil;
-            NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:responseData options:kNilOptions error:&jsonError];
+            NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:responseData
+                                                                           options:NSJSONReadingAllowFragments
+	                                                                         error:&jsonError];
             
             if (jsonDictionary && !jsonError) {
                 NSString *status = [jsonDictionary objectForKey:@"status"];

@@ -33,9 +33,3 @@
 #import "GTMapAnnotation.h"
 #import "GTGoogleGeocoder.h"
 #import "GTGoogleDirectionsOperation.h"
-
-#if TARGET_OS_IPHONE
-
-#else
-
-#endif

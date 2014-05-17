@@ -24,6 +24,7 @@
 		9989BA6A182CFDB100D8BCDD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9989BA68182CFDB100D8BCDD /* InfoPlist.strings */; };
 		9989BA6C182CFDB100D8BCDD /* GTLocationDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9989BA6B182CFDB100D8BCDD /* GTLocationDemoTests.m */; };
 		99BA40FA18EDB15900B41A88 /* GTMapRegionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99BA40F918EDB15900B41A88 /* GTMapRegionViewController.m */; };
+		AAD39906764D4E0B99682870 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D46974BF4B33426F9036F000 /* libPods.a */; };
 		CD7597400DFA4AC5AE77A084 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D46974BF4B33426F9036F000 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -88,6 +89,7 @@
 				9989BA60182CFDB100D8BCDD /* XCTest.framework in Frameworks */,
 				9989BA62182CFDB100D8BCDD /* UIKit.framework in Frameworks */,
 				9989BA61182CFDB100D8BCDD /* Foundation.framework in Frameworks */,
+				AAD39906764D4E0B99682870 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,9 +205,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9989BA72182CFDB100D8BCDD /* Build configuration list for PBXNativeTarget "GTLocationDemoTests" */;
 			buildPhases = (
+				5299FD54B3064B58827F8201 /* Check Pods Manifest.lock */,
 				9989BA5A182CFDB100D8BCDD /* Sources */,
 				9989BA5B182CFDB100D8BCDD /* Frameworks */,
 				9989BA5C182CFDB100D8BCDD /* Resources */,
+				F27501A723964560B4FC3039 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -242,6 +246,8 @@
 			mainGroup = 9989BA3A182CFDB100D8BCDD;
 			productRefGroup = 9989BA44182CFDB100D8BCDD /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+			);
 			projectRoot = "";
 			targets = (
 				9989BA42182CFDB100D8BCDD /* GTLocationDemo */,
@@ -287,7 +293,37 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		5299FD54B3064B58827F8201 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
 		842A25845F474AC9BE630182 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F27501A723964560B4FC3039 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -458,6 +494,7 @@
 		};
 		9989BA73182CFDB100D8BCDD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A66996DB1A834D5AAAF06679 /* Pods.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/GTLocationDemo.app/GTLocationDemo";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -480,6 +517,7 @@
 		};
 		9989BA74182CFDB100D8BCDD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A66996DB1A834D5AAAF06679 /* Pods.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/GTLocationDemo.app/GTLocationDemo";
 				FRAMEWORK_SEARCH_PATHS = (

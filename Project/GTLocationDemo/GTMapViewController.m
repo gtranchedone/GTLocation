@@ -7,7 +7,6 @@
 //
 
 #import <GTLocation/GTLocation.h>
-
 #import "GTMapViewController.h"
 
 @interface GTMapViewController () <UISearchBarDelegate, MKMapViewDelegate>
@@ -58,16 +57,17 @@
     [searchBar resignFirstResponder];
     [self setCurrentSearchString:searchString];
     [self.mapView removeAnnotations:self.mapView.annotations];
-    [GTGoogleGeocoder geocodeAddress:searchString withCompletionBlock:^(CLLocation *location, NSError *error) {
+    [GTGoogleGeocoder searchLocationsMatchingAddress:searchString nearLocation:self.mapView.userLocation.location apiKey:@"" completionBlock:^(NSArray *results, NSError *error) {
         if ([searchString isEqualToString:weakSelf.currentSearchString]) {
-            MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(location.coordinate,
-                                                                           location.altitude,
-                                                                           location.altitude);
-            
-            [weakSelf setSelectedLocation:location];
-            [weakSelf.mapView setRegion:region animated:YES];
-            [weakSelf.mapView addAnnotation:[[GTMapAnnotation alloc] initWithLocation:location name:searchString]];
-        }
+		    CLLocation *location = [results firstObject];
+		    if (location) {
+			    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(location.coordinate, location.altitude, location.altitude);
+                
+			    [weakSelf setSelectedLocation:location];
+			    [weakSelf.mapView setRegion:region animated:YES];
+			    [weakSelf.mapView addAnnotation:[[GTMapAnnotation alloc] initWithLocation:location name:searchString]];
+		    }
+	    }
     }];
 }
 

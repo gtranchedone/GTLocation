@@ -1,2 +1,4 @@
-pod "GTLocation", :path => "../"
-pod 'AFNetworking', '~> 2.2'
+link_with 'GTLocationDemo', 'GTLocationDemoTests'
+platform :ios, '7.0'
+
+pod 'GTLocation', :path => "./../"

@@ -33,7 +33,7 @@
 
 /**
  *  @abstract An enumeration of possible travel modes.
- *  @discussion The enumation values match the values supported by the Google Directions APIs.
+ *  @discussion The enumeration values match the values supported by the Google Directions APIs.
  */
 typedef NS_ENUM(NSUInteger, GTTravelMode) {
     /**
@@ -148,7 +148,7 @@ typedef NS_ENUM(NSInteger, GTTravelModeVehicleType) {
     GTTravelModeVehicleTypeCatapult = 888888,
     /**
      *  Unknown Vehicle Type. This is used in case the Google Direction APIs change and this class is not up-to-date.
-     *  @note GTTravelModeVehicleTypeUndefined also matches the 'OTHER' vechicle type on the Google Directions APIs.
+     *  @note GTTravelModeVehicleTypeUndefined also matches the 'OTHER' vehicle type on the Google Directions APIs.
      */
     GTTravelModeVehicleTypeUndefined = 999999
 };
@@ -158,7 +158,7 @@ FOUNDATION_EXTERN NSString * NSStringFromGTTravelMode(GTTravelMode travelMode);
 FOUNDATION_EXTERN NSString * NSStringFromGTTravelModeVehicleType(GTTravelModeVehicleType type);
 
 /**
- @abstract A GTRouteStep object represents a piace of directions to get from one location to another with a given travel mode.
+ @abstract A GTRouteStep object represents a subsection of overall directions for getting from one location to another with a given travel mode.
  */
 @interface GTRouteStep : NSObject <NSCoding, NSCopying, NSMutableCopying>
 
@@ -175,7 +175,7 @@ FOUNDATION_EXTERN NSString * NSStringFromGTTravelModeVehicleType(GTTravelModeVeh
 @property (nonatomic, readonly, copy) NSDictionary *travelInfo;
 /// The route distance in meters represented by the step.
 @property (nonatomic, readonly, assign) CLLocationDistance distance;
-/// The vechicle type that should be used to travel from the step's startLocation to the endLocation. It only applies when the travelMode is GTTravelModeTransit.
+/// The vehicle type that should be used to travel from the step's startLocation to the endLocation. It only applies when the travelMode is GTTravelModeTransit.
 @property (nonatomic, readonly, assign) GTTravelModeVehicleType vehicleType;
 /// The estimated time needed to go to travel from the step's startLocation to the endLocation using the step's travelMode.
 @property (nonatomic, readonly, assign) NSTimeInterval expectedTravelDuration;
@@ -188,7 +188,7 @@ FOUNDATION_EXTERN NSString * NSStringFromGTTravelModeVehicleType(GTTravelModeVeh
  *  @abstract Creates and returns a new GTRouteStep object initialized with the contents of the passed-in dictionary.
  *  @see -[GTRouteStep initWithStepDictionary:]
  *
- *  @param dictionary A dictionary containing the informations needed for the user to go from a location to another.
+ *  @param dictionary A dictionary containing the information needed for the user to go from a location to another.
  *  The dictionary format shall match the Google Directions APIs for a route's step.
  *
  *  @return Returns a new GTRouteStep object initialized with the contents of the passed-in dictionary.
@@ -198,7 +198,7 @@ FOUNDATION_EXTERN NSString * NSStringFromGTTravelModeVehicleType(GTTravelModeVeh
 /**
  *  @abstract Creates and returns a new GTRouteStep object initialized with the contents of the passed-in dictionary.
  *
- *  @param dictionary A dictionary containing the informations needed for the user to go from a location to another.
+ *  @param dictionary A dictionary containing the information needed for the user to go from a location to another.
  *  The dictionary format shall match the Google Directions APIs for a route's step.
  *
  *  @return Returns a new GTRouteStep object initialized with the contents of the passed-in dictionary.
@@ -242,10 +242,10 @@ FOUNDATION_EXTERN NSString * NSStringFromGTTravelModeVehicleType(GTTravelModeVeh
 @property (nonatomic, readonly, assign) GTTravelMode travelMode;
 
 ///--------------------------------------------------
-/// @name Retreiving the Route directions data
+/// @name Retrieving the Route directions data
 ///--------------------------------------------------
 
-/// An array of GTRouteStep objects representing each a small pieace of the journey.
+/// An array of GTRouteStep objects representing each a small piece of the journey.
 @property (nonatomic, readonly, copy) NSArray *steps;
 /// A MKPolyline object representing the Route that you can add as an overlay on a MKMapView object.
 @property (nonatomic, readonly, strong) MKPolyline *polyline;
@@ -263,7 +263,7 @@ FOUNDATION_EXTERN NSString * NSStringFromGTTravelModeVehicleType(GTTravelModeVeh
  *  @note Each of the route steps many have a different travel mode (e.g. Walking or Bus or Subway for GTTravelModeTransit).
  *  @see +[GTRoute routeWithSteps:travelMode:polyline:]
  *
- *  @param steps      An array of GTRouteStep objects representing each a small pieace of the journey.
+ *  @param steps      An array of GTRouteStep objects representing each a small piece of the journey.
  *  @param travelMode The travel mode used to calculate the route.
  *
  *  @return A newly created GTRoute object initialized with the passed-in values.
@@ -275,7 +275,7 @@ FOUNDATION_EXTERN NSString * NSStringFromGTTravelModeVehicleType(GTTravelModeVeh
  *  @note Each of the route steps many have a different travel mode (e.g. Walking or Bus or Subway for GTTravelModeTransit).
  *  @see -[GTRoute initWithSteps:travelMode:polyline:]
  *
- *  @param steps      An array of GTRouteStep objects representing each a small pieace of the journey.
+ *  @param steps      An array of GTRouteStep objects representing each a small piece of the journey.
  *  @param travelMode The travel mode used to calculate the route.
  *  @param polyline   A string representing  Route's polyline as returned by the Google Directions APIs.
  *
@@ -288,7 +288,7 @@ FOUNDATION_EXTERN NSString * NSStringFromGTTravelModeVehicleType(GTTravelModeVeh
  *  @note Each of the route steps many have a different travel mode (e.g. Walking or Bus or Subway for GTTravelModeTransit).
  *  @see -[GTRoute initWithSteps:travelMode:polyline:]
  *
- *  @param steps      An array of GTRouteStep objects representing each a small pieace of the journey.
+ *  @param steps      An array of GTRouteStep objects representing each a small piece of the journey.
  *  @param travelMode The travel mode used to calculate the route.
  *
  *  @return A newly created GTRoute object initialized with the passed-in values.
@@ -299,7 +299,7 @@ FOUNDATION_EXTERN NSString * NSStringFromGTTravelModeVehicleType(GTTravelModeVeh
  *  @abstract Returns a newly created GTRoute object initialized with the passed-in values.
  *  @note Each of the route steps many have a different travel mode (e.g. Walking or Bus or Subway for GTTravelModeTransit).
  *
- *  @param steps      An array of GTRouteStep objects representing each a small pieace of the journey.
+ *  @param steps      An array of GTRouteStep objects representing each a small piece of the journey.
  *  @param travelMode The travel mode used to calculate the route.
  *  @param polyline   A string representing  Route's polyline as returned by the Google Directions APIs.
  *
