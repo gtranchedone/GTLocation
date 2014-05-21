@@ -68,6 +68,9 @@
                         }
                     }];
                 }
+	            else if (completionBlock) {
+	                completionBlock(nil, nil);
+                }
             }
             else if (completionBlock) {
                 completionBlock(results, error);
@@ -182,7 +185,7 @@
                             }
                         }];
                         
-                        if ((numberOfWords == numberOfMatches) || numberOfMatches >= (NSInteger)floorf(numberOfWords / 2.0)) {
+                        if ((numberOfWords == numberOfMatches) || numberOfMatches >= (NSInteger)floorf(numberOfWords / 2.0f)) {
                             [results addObject:[self locationFromResponseDictionary:obj]];
                         }
                     }];
