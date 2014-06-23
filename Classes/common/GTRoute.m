@@ -498,7 +498,7 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
         // NOTE: hack
         if (travelMode == GTTravelModeSkating) {
             for (GTRouteStep *step in steps) {
-                step.expectedTravelDuration *= 2;
+                step.expectedTravelDuration /= 2.0;
                 step.travelMode = travelMode;
             }
         }
