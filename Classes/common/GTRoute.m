@@ -43,6 +43,9 @@ inline GTTravelMode GTTravelModeFromNSString(NSString *string)
     else if ([string isEqualToString:@"transit"]) {
         return GTTravelModeTransit;
     }
+    else if ([string isEqualToString:@"skating"]) {
+        return GTTravelModeSkating;
+    }
     else {
         return GTTravelModeDriving;
     }
@@ -60,8 +63,11 @@ inline NSString * NSStringFromGTTravelMode(GTTravelMode travelMode)
         case GTTravelModeWalking:
             return @"walking";
             
-        default:
+        case GTTravelModeDriving:
             return @"driving";
+            
+        case GTTravelModeSkating:
+            return @"skating";
     }
 }
 
@@ -127,6 +133,9 @@ inline NSString * NSStringFromGTTravelModeVehicleType(GTTravelModeVehicleType ty
             
         case GTTravelModeVehicleTypeTrolleyBus:
             return @"trolleybus";
+            
+        case GTTravelModeVehicleTypeSkate:
+            return @"skate";
             
         default:
             return nil;
@@ -199,6 +208,9 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
     }
     else if ([string isEqualToString:@"trolleybus"]) {
         return GTTravelModeVehicleTypeTrolleyBus;
+    }
+    else if ([string isEqualToString:@"skate"]) {
+        return GTTravelModeVehicleTypeSkate;
     }
     else {
         return GTTravelModeVehicleTypeUndefined;
@@ -483,6 +495,14 @@ FOUNDATION_STATIC_INLINE GTTravelModeVehicleType GTTravelModeVehicleTypeFromNSSt
 {
     self = [super init];
     if (self) {
+        // NOTE: hack
+        if (travelMode == GTTravelModeSkating) {
+            for (GTRouteStep *step in steps) {
+                step.expectedTravelDuration *= 2;
+            }
+        }
+        
+        // Initialize the route
         self.steps = steps;
         self.travelMode = travelMode;
         

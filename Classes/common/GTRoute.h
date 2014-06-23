@@ -51,7 +51,11 @@ typedef NS_ENUM(NSUInteger, GTTravelMode) {
     /**
      *  Driving
      */
-    GTTravelModeDriving
+    GTTravelModeDriving,
+    /**
+     *  Skating
+     */
+    GTTravelModeSkating
 };
 
 /**
@@ -142,6 +146,10 @@ typedef NS_ENUM(NSInteger, GTTravelModeVehicleType) {
      *  Future proof :-)
      */
     GTTravelModeVehicleTypeSpaceship,
+    /**
+     *  For fun :-)
+     */
+    GTTravelModeVehicleTypeSkate = 777777,
     /**
      *  For fun :-)
      */

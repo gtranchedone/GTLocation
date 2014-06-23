@@ -64,6 +64,10 @@ static NSString * const GTGoogleMapsDirectionsURLFormat = @"http://maps.googleap
 {
     if (!self.isCancelled) {
         NSString *travelMode = NSStringFromGTTravelMode(self.travelMode);
+        if (self.travelMode == GTTravelModeSkating) {
+            travelMode = NSStringFromGTTravelMode(GTTravelModeWalking);
+        }
+        
         NSString *origin = [self.class formattedStringFromLocation:self.origin];
         NSString *destination = [self.class formattedStringFromLocation:self.destination];
         NSString *queryURLString = [NSString stringWithFormat:GTGoogleMapsDirectionsURLFormat, origin, destination, travelMode];
